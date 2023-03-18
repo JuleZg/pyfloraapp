@@ -19,14 +19,18 @@ db = client["pyflora"]
 
 # Create a collection for the plants
 
-collection_name="plants"
+collection_name = "plants"
 collection = db[collection_name]
 
-drop_collection(collection_name,db)
+drop_collection(collection_name, db)
 
 # Define the plant data
 plants = [
-    {"name": "Rose", "type": "Flower", "watering": "Twice a week"},
+    {
+        "name": "Rose",
+        "type": "Flower",
+        "watering": "Twice a week,",
+    },
     {"name": "Tomato", "type": "Vegetable", "watering": "Once a day"},
     {"name": "Basil", "type": "Herb", "watering": "Every other day"},
     {"name": "Lavender", "type": "Flower", "watering": "Once a week"},
@@ -46,18 +50,18 @@ for plant in collection.find():
     print(plant)
 
 # Create a collection for the pots
-collection_name="pots"
+collection_name = "pots"
 collection = db[collection_name]
 
-drop_collection(collection_name,db)
+drop_collection(collection_name, db)
 
 pots = []
 for i in range(10):
     pot = {
-        'name': f'Pot{i}',
-        'color': random.choice(['red', 'blue', 'green', 'yellow']),
-        'material': random.choice(['clay', 'ceramic', 'metal', 'plastic']),
-        'size': random.randint(5, 20)
+        "name": f"Pot{i}",
+        "color": random.choice(["red", "blue", "green", "yellow"]),
+        "material": random.choice(["clay", "ceramic", "metal", "plastic"]),
+        "size": random.randint(5, 20),
     }
     pots.append(pot)
 
@@ -68,7 +72,6 @@ collection.insert_many(pots)
 # Print the inserted data
 for pot in collection.find():
     print(pot)
-
 
 
 # TODO:
