@@ -11,7 +11,7 @@ class PotService:
         self.database = self.client[database_name]  # spajanje na bazu
         self.collection = self.database[collection_name]  # spajanje na collection
 
-    def get_all_pots(self) -> List[dict]:
+    def get_all_pots(self):  # -> List[dict]-> JE ZA RETURN TYPE
         try:
             pots = self.collection.find()
             return [pot for pot in pots]
@@ -20,11 +20,10 @@ class PotService:
             return []
 
     def get_pot_by_id(self, pot_id):
-        id_obj = ObjectId(pot_id)
-        plant_dict = self.collection.find_one({"_id": id_obj})
-
-        print(f"NASLI POT  {plant_dict['name']}")
-        return plant_dict
+        id_obj = ObjectId(pot_id)  # KREIRAMO ID_OBJECT TIPA ObjectId
+        pot_dict = self.collection.find_one({"_id": id_obj})
+        print(f"NASLI POT  {pot_dict['name']}")
+        return pot_dict
 
     def delete_pot_by_id(self, pot_id):
         print("not implemented")

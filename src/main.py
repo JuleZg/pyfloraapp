@@ -1,4 +1,5 @@
 from controller.plant_contoller import PlantController
+from controller.pot_contoller import PotController
 from service.plant_service import PlantService
 from service.pot_service import PotService
 
@@ -13,31 +14,30 @@ collection_name_pots = "pots"
 
 def main():
 
+    # plant service
     my_plant_service = PlantService(
         connection_uri, database_name, collection_name_plants
-    )
+    )  # connection on plant collection
+    plants = my_plant_service.get_all_plants()  # get all plants
+    print(f"ALL PLANTS:\n", plants)
+    print("_" * 150)
+    plant = my_plant_service.get_plant_by_id(
+        "6419f0ed371b2b9e7c70d494"
+    )  # get plant by id
+    print(f"PLANT BY ID:\n", plant)
+    print("_" * 150)
 
-    # plants = my_plant_service.get_all_plants()
-    # print(plants)
-    #
-    # plant = my_plant_service.get_plant_by_id("64160b3daf13e5b0efceb51e")
-    # print(plant)
-    #
-    # my_pot_service = PotService(connection_uri, database_name, collection_name_pots)
-    # pots = my_pot_service.get_all_pots()
-    # pot = my_pot_service.get_pot_by_id("64162158d14c9ab38c704d64")
-    # print(pots)
-    # print()
+    # pot service
+    my_pot_service = PotService(
+        connection_uri, database_name, collection_name_pots
+    )  # connection on pot collection
+    pots = my_pot_service.get_all_pots()  # get all pots
+    print(f"ALL POTS:\n", pots)
+    print("_" * 150)
 
-    # print(pot)
-
-    my_plant_controller = PlantController(my_plant_service)
-
-    plants = my_plant_controller.get_all_plants()
-    print(plants)
-    print()
-    plant = my_plant_controller.get_plant_by_id("64162158d14c9ab38c704d59")
-    print(plant)
+    pot = my_pot_service.get_pot_by_id("6419f0ed371b2b9e7c70d4a1")  # get pot by id
+    print(f"POT BY ID:\n", pot)
+    print("_" * 150)
 
 
 if __name__ == "__main__":

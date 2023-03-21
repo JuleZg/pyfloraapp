@@ -26,11 +26,7 @@ drop_collection(collection_name, db)
 
 # Define the plant data
 plants = [
-    {
-        "name": "Rose",
-        "type": "Flower",
-        "watering": "Twice a week,",
-    },
+    {"name": "Rose", "type": "Flower", "watering": "Twice a week,"},
     {"name": "Tomato", "type": "Vegetable", "watering": "Once a day"},
     {"name": "Basil", "type": "Herb", "watering": "Every other day"},
     {"name": "Lavender", "type": "Flower", "watering": "Once a week"},
