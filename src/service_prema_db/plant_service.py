@@ -16,7 +16,7 @@ class PlantService:
     # destruktor https://www.geeksforgeeks.org/destructors-in-python/
     def __del__(
         self,
-    ) -> None:
+    ):
         self.client.close()
 
     # get_all_plants
