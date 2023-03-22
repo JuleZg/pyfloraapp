@@ -1,4 +1,5 @@
 from unicodedata import name
+from aiohttp import TraceRequestExceptionParams
 from bson import ObjectId
 import pymongo
 from typing import List
@@ -19,7 +20,7 @@ class PlantService:
         self.client.close()
 
     # get_all_plants
-    def get_all_plants(self) -> List[dict]:
+    def get_all_plants(self):
         try:
             plants = self.collection.find()
             return [plant for plant in plants]
@@ -42,11 +43,12 @@ class PlantService:
         plant_dict = self.collection.delete_one({"_id": id_obj})
         return plant_dict
 
-    # TODO: update_plant_notes
+    # update_plant_notes
     def update_plant_notes(self, id, notes):
         id_obj = ObjectId(id)
         plant_dict_name = self.collection.find_one({"_id": id_obj})
-        plant_dict = self.collection.update_one(
-            {"plant_dict_name['notes']": notes}, pymongo.UpdateOne
+        plant_dict_notes = {"$set": {"notes": notes}}
+        self.collection.update_one({"_id": id_obj}, plant_dict_notes)
+        return print(
+            f"Notes updated for plant '{plant_dict_name['name']}', and with note '{notes}' "
         )
-        return plant_dict["notes"]

@@ -78,6 +78,3 @@ collection.insert_many(pots)
 # Print the inserted data
 for pot in collection.find():
     print(pot)
-
-
-# TODO:

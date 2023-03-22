@@ -23,9 +23,7 @@ def main():
     plants = my_plant_service.get_all_plants()
     print(f"ALL PLANTS:\n", plants)
 
-    plant_update = my_plant_service.update_plant_notes(
-        "641b30a899ff01dc7d7de385", "test"
-    )
+    my_plant_service.update_plant_notes("641b30a899ff01dc7d7de37d", "test_push 2")
 
 
 if __name__ == "__main__":
