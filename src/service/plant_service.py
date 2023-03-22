@@ -34,7 +34,7 @@ class PlantService:
         print(f"NASLI BILJKU  {plant_dict['name']}")
         return plant_dict
 
-    # TODO: delete_plant_by_id
+    # delete_plant_by_id
     def delete_plant_by_id(self, id):
         id_obj = ObjectId(id)
         plant_dict_name = self.collection.find_one({"_id": id_obj})
@@ -43,5 +43,10 @@ class PlantService:
         return plant_dict
 
     # TODO: update_plant_notes
-    def update_plant_notes(self, notes):
-        print("not implemented")
+    def update_plant_notes(self, id, notes):
+        id_obj = ObjectId(id)
+        plant_dict_name = self.collection.find_one({"_id": id_obj})
+        plant_dict = self.collection.update_one(
+            {"plant_dict_name['notes']": notes}, pymongo.UpdateOne
+        )
+        return plant_dict["notes"]
