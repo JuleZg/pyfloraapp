@@ -27,6 +27,9 @@ def main():
     print(f"PLANT BY ID:\n", plant)
     print("_" * 150)
 
+    del_plant_by_id = my_plant_service.delete_plant_by_id("641b27ec6601e414fdcc11c5")
+    print("_" * 150)
+
     # pot service
     my_pot_service = PotService(
         connection_uri, database_name, collection_name_pots
@@ -35,7 +38,7 @@ def main():
     print(f"ALL POTS:\n", pots)
     print("_" * 150)
 
-    pot = my_pot_service.get_pot_by_id("6419f0ed371b2b9e7c70d4a1")  # get pot by id
+    pot = my_pot_service.get_pot_by_id("641b1c565b7a33ba48cd282e")  # get pot by id
     print(f"POT BY ID:\n", pot)
     print("_" * 150)
 

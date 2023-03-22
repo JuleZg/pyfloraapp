@@ -26,16 +26,26 @@ drop_collection(collection_name, db)
 
 # Define the plant data
 plants = [
-    {"name": "Rose", "type": "Flower", "watering": "Twice a week,"},
-    {"name": "Tomato", "type": "Vegetable", "watering": "Once a day"},
-    {"name": "Basil", "type": "Herb", "watering": "Every other day"},
-    {"name": "Lavender", "type": "Flower", "watering": "Once a week"},
-    {"name": "Mint", "type": "Herb", "watering": "Every other day"},
-    {"name": "Succulent", "type": "Cactus", "watering": "Once a month"},
-    {"name": "Snake plant", "type": "Indoor plant", "watering": "Once a month"},
-    {"name": "Fern", "type": "Indoor plant", "watering": "Twice a week"},
-    {"name": "Spider plant", "type": "Indoor plant", "watering": "Once a week"},
-    {"name": "Aloe vera", "type": "Cactus", "watering": "Once a week"},
+    {"name": "Rose", "type": "Flower", "watering": "Twice a week,", "notes": ""},
+    {"name": "Tomato", "type": "Vegetable", "watering": "Once a day", "notes": ""},
+    {"name": "Basil", "type": "Herb", "watering": "Every other day", "notes": ""},
+    {"name": "Lavender", "type": "Flower", "watering": "Once a week", "notes": ""},
+    {"name": "Mint", "type": "Herb", "watering": "Every other day", "notes": ""},
+    {"name": "Succulent", "type": "Cactus", "watering": "Once a month", "notes": ""},
+    {
+        "name": "Snake plant",
+        "type": "Indoor plant",
+        "watering": "Once a month",
+        "notes": "",
+    },
+    {"name": "Fern", "type": "Indoor plant", "watering": "Twice a week", "notes": ""},
+    {
+        "name": "Spider plant",
+        "type": "Indoor plant",
+        "watering": "Once a week",
+        "notes": "",
+    },
+    {"name": "Aloe vera", "type": "Cactus", "watering": "Once a week", "notes": ""},
 ]
 
 # Insert the plant data into the collection

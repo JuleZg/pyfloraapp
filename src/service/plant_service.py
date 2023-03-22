@@ -1,3 +1,4 @@
+from unicodedata import name
 from bson import ObjectId
 import pymongo
 from typing import List
@@ -17,6 +18,7 @@ class PlantService:
     ) -> None:
         self.client.close()
 
+    # get_all_plants
     def get_all_plants(self) -> List[dict]:
         try:
             plants = self.collection.find()
@@ -25,17 +27,21 @@ class PlantService:
             print(f"An error occurred while getting all plants: {e}")
             return []
 
+    # get_plant_by_id
     def get_plant_by_id(self, id):
         id_obj = ObjectId(id)
         plant_dict = self.collection.find_one({"_id": id_obj})
-
         print(f"NASLI BILJKU  {plant_dict['name']}")
         return plant_dict
 
+    # TODO: delete_plant_by_id
     def delete_plant_by_id(self, id):
-        print("not implemented")
-        # TODO:
+        id_obj = ObjectId(id)
+        plant_dict_name = self.collection.find_one({"_id": id_obj})
+        print(f"Deleted plant : {plant_dict_name['name']}\n{plant_dict_name}")
+        plant_dict = self.collection.delete_one({"_id": id_obj})
+        return plant_dict
 
+    # TODO: update_plant_notes
     def update_plant_notes(self, notes):
         print("not implemented")
-        # TODO:

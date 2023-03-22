@@ -20,9 +20,9 @@ class PlantController:
         return plant_dict
 
     def delete_plant_by_id(self, plant_id):
-        # vidjet sta delete vraca
+        # TODO vidjet sta delete vraca
         return self.service.delete_plant_by_id(plant_id)
 
     def update_plant_notes(self, notes):
-        # vidjet sta vraca update
+        # TODO vidjet sta vraca update
         return self.service.update_plant_notes(notes)

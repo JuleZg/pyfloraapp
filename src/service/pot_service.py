@@ -25,10 +25,10 @@ class PotService:
         print(f"NASLI POT  {pot_dict['name']}")
         return pot_dict
 
+    # TODO: delete_pot_by_id
     def delete_pot_by_id(self, pot_id):
         print("not implemented")
-        # TODO:
 
+    # TODO: add_plant_to_pot
     def add_plant_to_pot(self, plant_id, pot_id):
         print("not implemented")
-        # TODO:
