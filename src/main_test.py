@@ -4,7 +4,10 @@ from controller_prema_GUI.pot_contoller import PotController
 from scripts.pyflora_mongodb import drop_collection
 from service_prema_db.plant_service import PlantService
 from service_prema_db.pot_service import PotService
+from service_prema_db.users_service import UsersService
 from PIL import Image
+
+from service_prema_db.users_service import UserService
 
 connection_uri = "mongodb://localhost:27017/"
 
@@ -12,6 +15,7 @@ database_name = "pyflora"
 
 collection_name_plants = "plants"
 collection_name_pots = "pots"
+collection_name_users = "users"
 
 
 def main():
@@ -36,21 +40,14 @@ def main():
 
     # my_pot_service.get_pot_by_name("Pot3")
 
+    # USER SERVICE
+    # connection on pot collection
+    my_users_service = UsersService(
+        connection_uri, database_name, collection_name_users
+    )
+    # get_all_users
+    my_users_service.get_all_users()
+
 
 if __name__ == "__main__":
     main()
-
-
-# Create a collection for the users
-collection_name = "users"
-collection(db[collection_name])
-
-drop_collection(collection_name, db)
-users = []
-
-# Insert the user data into the collection
-collection.insert_many(users)
-
-# Print the inserted data
-for user in collection.find():
-    print(user)

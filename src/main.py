@@ -2,6 +2,7 @@ from controller_prema_GUI.plant_contoller import PlantController
 from controller_prema_GUI.pot_contoller import PotController
 from service_prema_db.plant_service import PlantService
 from service_prema_db.pot_service import PotService
+from service_prema_db.users_service import UsersService
 
 connection_uri = "mongodb://localhost:27017/"
 
@@ -9,6 +10,7 @@ database_name = "pyflora"
 
 collection_name_plants = "plants"
 collection_name_pots = "pots"
+collection_name_users = "users"
 
 
 def main():
@@ -22,13 +24,13 @@ def main():
     my_plant_service.get_all_plants()
 
     # get plant by id
-    my_plant_service.get_plant_by_id("641b88ed057c974b9384ab2e")
+    my_plant_service.get_plant_by_id("6421e008374ca67c01d8647c")
 
     # delete_plant_by_id
-    my_plant_service.delete_plant_by_id("641b88ed057c974b9384ab2f")
+    my_plant_service.delete_plant_by_id("6421e008374ca67c01d8647d")
 
     # update_plant_notes
-    my_plant_service.update_plant_notes("641b88ed057c974b9384ab30", "notes test set")
+    my_plant_service.update_plant_notes("6421e008374ca67c01d8647e", "notes test set")
 
     ## POT SERVICE
     # connection on pot collection
@@ -38,10 +40,18 @@ def main():
     my_pot_service.get_all_pots()
 
     # get pot by id
-    my_pot_service.get_pot_by_id("641b88ed057c974b9384ab39")
+    my_pot_service.get_pot_by_id("6421e008374ca67c01d86480")
 
     # get pot by name
-    my_pot_service.get_pot_by_name("Pot3")
+    my_pot_service.get_pot_by_name("Pot4")
+
+    # USER SERVICE
+    # connection on pot collection
+    my_users_service = UsersService(
+        connection_uri, database_name, collection_name_users
+    )
+    # get_all_users
+    my_users_service.get_all_users()
 
 
 if __name__ == "__main__":

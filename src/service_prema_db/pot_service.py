@@ -13,6 +13,7 @@ class PotService:
         self.database = self.client[database_name]  # spajanje na bazu
         self.collection = self.database[collection_name]  # spajanje na collection
 
+    # get_all_pots
     def get_all_pots(self):  # -> List[dict]-> JE ZA RETURN TYPE
         try:
             pots = self.collection.find()
@@ -21,6 +22,7 @@ class PotService:
             print(f"An error occurred while getting all plants: {e}")
             return []
 
+    # get_pot_by_id
     def get_pot_by_id(self, pot_id):
         id_obj = ObjectId(pot_id)  # KREIRAMO ID_OBJECT TIPA ObjectId
         pot_dict = self.collection.find_one({"_id": id_obj})
@@ -33,7 +35,7 @@ class PotService:
         print(f"NASLI POT: {pot_dict['name']}")
         return pot_dict
 
-    #  delete_pot_by_id
+    # delete_pot_by_id
     def delete_pot_by_id(self, pot_id):
         id_obj = ObjectId(pot_id)
         pot_dict_name = self.collection.find_one({"_id": id_obj})
