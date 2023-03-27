@@ -30,7 +30,9 @@ def main():
 
     # my_plant_service.insert_img("641b88ed057c974b9384ab2e")
 
-    my_pot_service.delete_pot_by_id("641b88ed057c974b9384ab38")
+    my_pot_service.delete_pot_by_id("6421d6ca847a39db9a67ca19")
+
+    my_pot_service.get_pot_by_name("Pot3")
 
 
 if __name__ == "__main__":

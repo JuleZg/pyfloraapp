@@ -1,7 +1,9 @@
+from os import name
 from bson import ObjectId
 import pymongo
 from typing import List
 from pymongo.errors import PyMongoError
+from traitlets import ObjectName
 
 
 class PotService:
@@ -25,12 +27,18 @@ class PotService:
         print(f"NASLI POT  {pot_dict['name']}")
         return pot_dict
 
-    # TODO: delete_pot_by_id
+    # get_pot_by_name
+    def get_pot_by_name(self, pot_name):
+        pot_dict = self.collection.find_one({"name": pot_name})
+        print(f"NASLI POT: {pot_dict['name']}")
+        return pot_dict
+
+    #  delete_pot_by_id
     def delete_pot_by_id(self, pot_id):
         id_obj = ObjectId(pot_id)
-        pot_dict_name = self.collection.find_one({"_id": id_obj})  # delete by id
+        pot_dict_name = self.collection.find_one({"_id": id_obj})
         print(f"Deleted pot : {pot_dict_name['name']}\n{pot_dict_name}")
-        pot_dict = self.collection.delete_one({"_id": id_obj})  # delete by id
+        pot_dict = self.collection.delete_one({"_id": id_obj})
         return pot_dict
 
     # TODO: add_plant_to_pot
