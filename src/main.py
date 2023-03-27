@@ -40,6 +40,9 @@ def main():
     # get pot by id
     my_pot_service.get_pot_by_id("641b88ed057c974b9384ab39")
 
+    # get pot by name
+    my_pot_service.get_pot_by_name("Pot3")
+
 
 if __name__ == "__main__":
     main()
