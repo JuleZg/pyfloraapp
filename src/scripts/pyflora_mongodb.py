@@ -21,7 +21,6 @@ db = client["pyflora"]
 # Create a collection for the users
 collection_name = "users"
 collection = db[collection_name]
-db.grantRolesToUser("admin", [{role: "readWrite", db: "mydatabase"}])
 
 drop_collection(collection_name, db)
 users = [
