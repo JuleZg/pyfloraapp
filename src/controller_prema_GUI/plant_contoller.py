@@ -1,4 +1,4 @@
-from service.plant_service import PlantService
+from service_prema_db.plant_service import PlantService
 
 # dodati import paketa za view (tkinter)
 # pozivati iskljucivo kontroller iz tkintera (view, u ovom slucaj plantView)

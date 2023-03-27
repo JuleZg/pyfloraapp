@@ -52,3 +52,15 @@ class PlantService:
         return print(
             f"Notes updated for plant '{plant_dict_name['name']}', and with note '{notes}' "
         )
+
+    # insert img to plants collection
+
+    def insert_img(self, id):
+        with open("src/scripts/plant_img/rose.png", "rb") as f:
+            image_data = f.read()
+        id_obj = ObjectId(id)
+        plant_dict_name = self.collection.find_one({"_id": id_obj})
+        plant_dict_img = {"$set": {"image": image_data}}
+        self.collection.update_one({"_id": id_obj}, plant_dict_img)
+
+        return print(plant_dict_name["name"], "img inserted.")

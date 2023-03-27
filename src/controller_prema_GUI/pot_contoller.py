@@ -1,5 +1,5 @@
 from bson import ObjectId
-from service.pot_service import PotService
+from service_prema_db.pot_service import PotService
 
 
 class PotController:

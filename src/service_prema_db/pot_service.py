@@ -27,7 +27,11 @@ class PotService:
 
     # TODO: delete_pot_by_id
     def delete_pot_by_id(self, pot_id):
-        print("not implemented")
+        id_obj = ObjectId(pot_id)
+        pot_dict_name = self.collection.find_one({"_id": id_obj})  # delete by id
+        print(f"Deleted pot : {pot_dict_name['name']}\n{pot_dict_name}")
+        pot_dict = self.collection.delete_one({"_id": id_obj})  # delete by id
+        return pot_dict
 
     # TODO: add_plant_to_pot
     def add_plant_to_pot(self, plant_id, pot_id):
