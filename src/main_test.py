@@ -7,7 +7,6 @@ from service_prema_db.pot_service import PotService
 from service_prema_db.users_service import UsersService
 from PIL import Image
 
-from service_prema_db.users_service import UserService
 
 connection_uri = "mongodb://localhost:27017/"
 
@@ -34,7 +33,7 @@ def main():
 
     # insert img to plants collection
 
-    # my_plant_service.insert_img("641b88ed057c974b9384ab2e")
+    my_plant_service.insert_img("64244db3a4a1bf97f880eccd")
 
     # my_pot_service.delete_pot_by_id("6421d6ca847a39db9a67ca19")
 
