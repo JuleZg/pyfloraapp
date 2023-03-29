@@ -21,8 +21,7 @@ db = client["pyflora"]
 # Create a collection for the users
 collection_name = "users"
 collection = db[collection_name]
-
-drop_collection(collection_name, db)
+# drop_collection(collection_name, db)
 users = [
     {
         "username": "admin",
@@ -43,7 +42,6 @@ for user in collection.find():
 # Create a collection for the plants
 collection_name = "plants"
 collection = db[collection_name]
-
 drop_collection(collection_name, db)
 
 # Define the plant data
@@ -121,7 +119,6 @@ for plant in collection.find():
 # Create a collection for the pots
 collection_name = "pots"
 collection = db[collection_name]
-
 drop_collection(collection_name, db)
 
 pots = []
