@@ -33,13 +33,13 @@ class PlantService:
     def get_plant_by_id(self, id):
         id_obj = ObjectId(id)
         plant_dict = self.collection.find_one({"_id": id_obj})
-        print(f"NASLI BILJKU  {plant_dict['name']}")
+        print(f"Plant found:  {plant_dict['name']}")
         return plant_dict
 
     # get_plant_by_name
     def get_plant_by_name(self, plant_name):
         plant_dict = self.collection.find_one({"name": plant_name})
-        print(f"NASLI PLANT: {plant_dict['name']}")
+        print(f"Plant found: {plant_dict['name']}")
         return plant_dict
 
     # delete_plant_by_id

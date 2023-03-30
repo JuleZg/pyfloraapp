@@ -8,21 +8,22 @@ from service_prema_db.plant_service import PlantService
 class PlantController:
     # Constructor prima 3 parama, svaki je tipa String https://www.geeksforgeeks.org/constructors-in-python/
     # kasnije kad napravimo plantView dodat plantView u konstruktor
-    def __init__(self, plant_service: PlantService):
-        self.service = plant_service
+    def __init__(self, connection_uri, database_name, collection_name_plants):
+        self.service = PlantService(
+            connection_uri, database_name, collection_name_plants
+        )
 
     def get_all_plants(self):
-        plants = self.service.get_all_plants()
-        return plants
+        return self.service.get_all_plants()
 
     def get_plant_by_id(self, plant_id):
-        plant_dict = self.service.get_plant_by_id(plant_id)
-        return plant_dict
+        return self.service.get_plant_by_id(plant_id)
+
+    def get_plant_by_name(self, plant_name):
+        return self.service.get_plant_by_name(plant_name)
 
     def delete_plant_by_id(self, plant_id):
-        # TODO vidjet sta delete vraca
         return self.service.delete_plant_by_id(plant_id)
 
-    def update_plant_notes(self, notes):
-        # TODO vidjet sta vraca update
-        return self.service.update_plant_notes(notes)
+    def update_plant_notes(self, id, notes):
+        return self.service.update_plant_notes(id, notes)

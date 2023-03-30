@@ -45,13 +45,26 @@ def main():
     # get pot by name
     my_pot_service.get_pot_by_name("Pot4")
 
-    # USER SERVICE
+    ## USER SERVICE
     # connection on pot collection
     my_users_service = UsersService(
         connection_uri, database_name, collection_name_users
     )
     # get_all_users
     my_users_service.get_all_users()
+
+    ## POT CONTROLLER
+    # connection on pot collection
+    my_pot_controller = PotController(
+        connection_uri, database_name, collection_name_pots
+    )
+    my_pot_controller.get_all_pots()
+    print()
+    my_pot_controller.get_pot_by_name("Pot0")
+    print()
+    my_pot_controller.get_pot_by_id("642471298f5fbe8430a5c7ad")
+    print()
+    my_pot_controller.delete_pot_by_id("642471298f5fbe8430a5c7b0")
 
 
 if __name__ == "__main__":

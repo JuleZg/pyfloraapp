@@ -84,6 +84,19 @@ def main():
     print()
     # my_pot_controller.delete_pot_by_id("642471298f5fbe8430a5c7b0")
 
+    my_plant_controller = PlantController(
+        connection_uri, database_name, collection_name_plants
+    )
+    my_plant_controller.get_all_plants()
+    print()
+    my_plant_controller.get_plant_by_id("642595f12ab0c1fcdb80cb36")
+    my_plant_controller.get_plant_by_name("Lavender")
+    # my_plant_controller.delete_plant_by_id("642595f12ab0c1fcdb80cb37")
+    my_plant_controller.get_all_plants()
+    my_plant_controller.update_plant_notes(
+        "642595f12ab0c1fcdb80cb39", "test cotroller notes"
+    )
+
 
 if __name__ == "__main__":
     main()
