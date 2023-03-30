@@ -17,6 +17,8 @@ class PotService:
     def get_all_pots(self):  # -> List[dict]-> JE ZA RETURN TYPE
         try:
             pots = self.collection.find()
+            print("\n".join([str(pot) for pot in pots]))
+
             return [pot for pot in pots]
         except PyMongoError as e:
             print(f"An error occurred while getting all plants: {e}")

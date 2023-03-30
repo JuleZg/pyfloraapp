@@ -52,7 +52,7 @@ def main():
         bg="#f5f6f8",
         font=font,
     )
-    password_label.place(x=60, y=50)
+    password_label.place(x=40, y=50)
 
     # entry field for the username
 
@@ -68,7 +68,7 @@ def main():
         bg="#f5f6f8",
         font=font,
     )
-    password_label.place(x=60, y=90)
+    password_label.place(x=40, y=90)
 
     # entry field for the password
     password_entry = tk.Entry(
@@ -82,7 +82,7 @@ def main():
     login_button = tk.Button(
         window,
         text="Login",
-        padx=5,
+        padx=20,
         pady=5,
         bg="#f5f6f8",
         font=font,

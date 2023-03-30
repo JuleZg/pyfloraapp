@@ -32,7 +32,7 @@ def main():
         connection_uri, database_name, collection_name_plants
     )
     # get all plants
-    my_plant_service.get_all_plants()
+    #   my_plant_service.get_all_plants()
 
     # get plant by id
     #    my_plant_service.get_plant_by_id("6424516c9f5578411f95004c")
@@ -54,7 +54,7 @@ def main():
     #    my_pot_service.get_all_pots()
 
     # get pot by id
-    #    my_pot_service.get_pot_by_id("6424516c9f5578411f950056")
+    # my_pot_service.get_pot_by_id("642471298f5fbe8430a5c7ac")
 
     # get pot by name
     #    my_pot_service.get_pot_by_name("Pot4")
@@ -65,7 +65,7 @@ def main():
         connection_uri, database_name, collection_name_users
     )
     # get_all_users
-    my_users_service.get_all_users()
+    # my_users_service.get_all_users()
 
     # add user
     # my_users_service.add_user("maja", "maja", "maja", "majic", "maja@email.com")
@@ -73,53 +73,17 @@ def main():
     # delete user
     # my_users_service.del_user("maja")
 
+    my_pot_controller = PotController(
+        connection_uri, database_name, collection_name_pots
+    )
+    my_pot_controller.get_all_pots()
+    print()
+    # my_pot_controller.get_pot_by_name("Pot0")
+    print()
+    # my_pot_controller.get_pot_by_id("642471298f5fbe8430a5c7ad")
+    print()
+    # my_pot_controller.delete_pot_by_id("642471298f5fbe8430a5c7b0")
 
-# Create a new tkinter window
-window = tk.Tk()
-
-# Set the window title
-window.title("Login")
-
-# Set the window size
-window.geometry("300x150")
-
-# get the screen width and height
-screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight()
-
-# calculate the x and y coordinates to center the window
-x = (screen_width // 2) - (300 // 2)
-y = (screen_height // 2) - (150 // 2)
-window.geometry(f"+{x}+{y}")
-# Load the image file
-img = Image.open("src/scripts/plant_img/login.png")
-
-# Convert the image to a PhotoImage object
-bg_img = ImageTk.PhotoImage(img.resize((300, 150)))
-
-# Create a label with the image as the background
-bg_label = tk.Label(window, image=bg_img)
-bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-
-# Add an entry field for the username
-username_entry = tk.Entry(window)
-username_entry.pack()
-
-# Add a label for the password
-password_label = tk.Label(window, text="Password:")
-password_label.pack()
-
-# Add an entry field for the password
-password_entry = tk.Entry(window, show="*")
-password_entry.pack()
-
-# Add a login button
-login_button = tk.Button(window, text="Login")
-login_button.pack()
-
-# Start the main loop of the window
-window.mainloop()
 
 if __name__ == "__main__":
     main()
