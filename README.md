@@ -10,8 +10,8 @@ TODO:    2. Ažuriranje podataka sa senzora
             Ovisno o očitanim podacima, pokreću se aktivnosti
             Ako je vlažnost zemljišta niska, pokreće se aktivnost zalijevanja i sl.
 
-TODO:    3. Evidencija biljaka
-            Aplikacija treba imati bazu podataka o biljkama
+TODO:    3. Evidencija biljaka # API https://docs.trefle.io/docs/examples/snippets/
+            Aplikacija treba imati bazu podataka o biljkama 
                 a. Podaci koje treba čuvati o biljci su ():
                     i. identifikacijski broj
                     ii. naziv

@@ -1,5 +1,5 @@
-from controller_prema_GUI.plant_contoller import PlantController
-from controller_prema_GUI.pot_contoller import PotController
+from controller_prema_GUI.plant_controller import PlantController
+from controller_prema_GUI.pot_controller import PotController
 from service_prema_db.plant_service import PlantService
 from service_prema_db.pot_service import PotService
 from service_prema_db.users_service import UsersService

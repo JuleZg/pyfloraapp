@@ -8,8 +8,9 @@ from service_prema_db.users_service import UsersService
 from PIL import Image"""
 from PIL import Image, ImageTk
 from turtle import bgpic, position
-from controller_prema_GUI.plant_contoller import PlantController
-from controller_prema_GUI.pot_contoller import PotController
+from controller_prema_GUI.plant_controller import PlantController
+from controller_prema_GUI.pot_controller import PotController
+from controller_prema_GUI.users_controler import UsersController
 from service_prema_db.plant_service import PlantService
 from service_prema_db.pot_service import PotService
 from service_prema_db.users_service import UsersService
@@ -26,76 +27,38 @@ collection_name_users = "users"
 
 def main():
 
-    ## PLANT SERVICE
-    # connection on plant collection
     my_plant_service = PlantService(
         connection_uri, database_name, collection_name_plants
     )
-    # get all plants
-    #   my_plant_service.get_all_plants()
-
-    # get plant by id
-    #    my_plant_service.get_plant_by_id("6424516c9f5578411f95004c")
-
-    # delete_plant_by_id
-    #    my_plant_service.delete_plant_by_id("6424516c9f5578411f95004d")
-
-    # update_plant_notes
-    #    my_plant_service.update_plant_notes("6424516c9f5578411f95004e", "notes test set")
-
-    # insert_img_plant
-    # my_plant_service.insert_img("6424516c9f5578411f95004c")
-
-    ## POT SERVICE
-    # connection on pot collection
     my_pot_service = PotService(connection_uri, database_name, collection_name_pots)
 
-    # get all pots
-    #    my_pot_service.get_all_pots()
-
-    # get pot by id
-    # my_pot_service.get_pot_by_id("642471298f5fbe8430a5c7ac")
-
-    # get pot by name
-    #    my_pot_service.get_pot_by_name("Pot4")
-
-    # USER SERVICE
-    # connection on pot collection
     my_users_service = UsersService(
         connection_uri, database_name, collection_name_users
     )
-    # get_all_users
-    # my_users_service.get_all_users()
-
-    # add user
-    # my_users_service.add_user("maja", "maja", "maja", "majic", "maja@email.com")
-
-    # delete user
-    # my_users_service.del_user("maja")
-
     my_pot_controller = PotController(
         connection_uri, database_name, collection_name_pots
     )
-    my_pot_controller.get_all_pots()
-    print()
-    # my_pot_controller.get_pot_by_name("Pot0")
-    print()
-    # my_pot_controller.get_pot_by_id("642471298f5fbe8430a5c7ad")
-    print()
-    # my_pot_controller.delete_pot_by_id("642471298f5fbe8430a5c7b0")
 
     my_plant_controller = PlantController(
         connection_uri, database_name, collection_name_plants
     )
-    my_plant_controller.get_all_plants()
-    print()
-    my_plant_controller.get_plant_by_id("642595f12ab0c1fcdb80cb36")
-    my_plant_controller.get_plant_by_name("Lavender")
-    # my_plant_controller.delete_plant_by_id("642595f12ab0c1fcdb80cb37")
-    my_plant_controller.get_all_plants()
-    my_plant_controller.update_plant_notes(
-        "642595f12ab0c1fcdb80cb39", "test cotroller notes"
+
+    my_users_controller = UsersController(
+        connection_uri, database_name, collection_name_users
     )
+
+    """my_users_controller.add_user(
+        "kontroler1 admin",
+        "kontroler1 admin",
+        "kontroler1 ime",
+        "kontroler1 prezime",
+        "kontroler1@mail.com",
+    )"""
+    my_users_controller.get_all_users()
+
+    my_users_controller.del_user("kontroler1 admin")
+
+    my_users_controller.get_all_users()
 
 
 if __name__ == "__main__":

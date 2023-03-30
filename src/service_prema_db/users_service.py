@@ -1,3 +1,5 @@
+from os import name
+from typing import Collection
 import pymongo
 from pymongo.errors import PyMongoError
 
@@ -11,10 +13,9 @@ class UsersService:
     # get_all_users
     def get_all_users(self):
         try:
-            documents = self.collection.find()
-            for user in documents:
-                print(user)
-            return [user for user in documents]
+            users = self.collection.find()
+            print("\n".join([str(user) for user in users]))
+            return [user for user in users]
         except PyMongoError as e:
             print(f"An error occurred while getting all users {e}")
             return []
@@ -29,7 +30,8 @@ class UsersService:
             "email": email,
         }
         new_user = self.collection.insert_one(user_data)
-        return print("Added new user: "), {new_user["first_name"]}
+        print(user_data["username"])
+        return user_data
 
     # delete_user_by_username
     def del_user(self, username):

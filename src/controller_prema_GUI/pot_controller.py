@@ -1,4 +1,3 @@
-from bson import ObjectId
 from service_prema_db.pot_service import PotService
 
 
