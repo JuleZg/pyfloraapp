@@ -1,6 +1,8 @@
 from PIL import Image, ImageTk
 import tkinter as tk
 
+from numpy import size
+
 
 def main():
 
@@ -11,21 +13,21 @@ def main():
     window.title("PyFlora Login")
 
     # Set the window size
-    window.geometry("400x250")
+    window.geometry("350x400")
 
     # get the screen width and height
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
 
     # calculate the x and y coordinates to center the window
-    x = (screen_width // 2) - (300 // 2)
-    y = (screen_height // 2) - (150 // 2)
+    x = (screen_width // 2) - (350 // 2)
+    y = (screen_height // 2) - (400 // 2)
     window.geometry(f"+{x}+{y}")
     # Load the image file
     img = Image.open("src/scripts/plant_img/login.png")
 
     # Convert the image to a PhotoImage object
-    bg_img = ImageTk.PhotoImage(img.resize((400, 250)))
+    bg_img = ImageTk.PhotoImage(img.resize((350, 400)))
 
     # Create a label with the image as the background
     bg_label = tk.Label(window, image=bg_img)
@@ -41,10 +43,14 @@ def main():
         bg="#f5f6f8",
         font=font,
     )
-    welcome_label.place(x=150, y=10)
+    welcome_label.place(
+        relx=0.5,
+        y=40,
+        anchor=tk.CENTER,
+    )
 
     # label for the username
-    password_label = tk.Label(
+    username_label = tk.Label(
         window,
         text="Username:",
         padx=10,
@@ -52,12 +58,24 @@ def main():
         bg="#f5f6f8",
         font=font,
     )
-    password_label.place(x=40, y=50)
+    username_label.place(
+        relx=0.5,
+        y=90,
+        anchor=tk.CENTER,
+    )
 
     # entry field for the username
 
-    username_entry = tk.Entry(window, font=font, fg="grey")
-    username_entry.place(x=160, y=60)
+    username_entry = tk.Entry(
+        window,
+        font=font,
+        fg="black",
+    )
+    username_entry.place(
+        relx=0.5,
+        y=130,
+        anchor=tk.CENTER,
+    )
 
     # label for the password
     password_label = tk.Label(
@@ -68,7 +86,11 @@ def main():
         bg="#f5f6f8",
         font=font,
     )
-    password_label.place(x=40, y=90)
+    password_label.place(
+        relx=0.5,
+        y=170,
+        anchor=tk.CENTER,
+    )
 
     # entry field for the password
     password_entry = tk.Entry(
@@ -76,7 +98,11 @@ def main():
         show="*",
         font=font,
     )
-    password_entry.place(x=160, y=100)
+    password_entry.place(
+        relx=0.5,
+        y=210,
+        anchor=tk.CENTER,
+    )
 
     # login button
     login_button = tk.Button(
@@ -86,8 +112,13 @@ def main():
         pady=5,
         bg="#f5f6f8",
         font=font,
+        width=10,
     )
-    login_button.place(x=180, y=140)
+    login_button.place(
+        relx=0.5,
+        y=260,
+        anchor=tk.CENTER,
+    )
 
     # Start the main loop of the window
     window.mainloop()

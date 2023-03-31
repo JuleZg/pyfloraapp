@@ -35,6 +35,10 @@ def main():
     my_users_service = UsersService(
         connection_uri, database_name, collection_name_users
     )
+
+    print()
+    my_users_service.find_user("jozo")
+
     my_pot_controller = PotController(
         connection_uri, database_name, collection_name_pots
     )
@@ -46,19 +50,6 @@ def main():
     my_users_controller = UsersController(
         connection_uri, database_name, collection_name_users
     )
-
-    """my_users_controller.add_user(
-        "kontroler1 admin",
-        "kontroler1 admin",
-        "kontroler1 ime",
-        "kontroler1 prezime",
-        "kontroler1@mail.com",
-    )"""
-    my_users_controller.get_all_users()
-
-    my_users_controller.del_user("kontroler1 admin")
-
-    my_users_controller.get_all_users()
 
 
 if __name__ == "__main__":

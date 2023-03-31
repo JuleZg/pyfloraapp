@@ -1,7 +1,9 @@
+from ast import NotIn
 from os import name
 from typing import Collection
 import pymongo
 from pymongo.errors import PyMongoError
+from tkinter import messagebox
 
 
 class UsersService:
@@ -19,6 +21,20 @@ class UsersService:
         except PyMongoError as e:
             print(f"An error occurred while getting all users {e}")
             return []
+
+    # find_user
+    def find_user(self, username):
+        try:
+            user = self.collection.find_one({"username": username})
+            if user:
+                print(user)
+                return user
+            else:
+                print("User not found")
+                return None
+        except PyMongoError as e:
+            print(f"An error occurred while getting the user {username}: {e}")
+            return None
 
     # add user
     def add_user(self, username, password, first_name, last_name, email):
