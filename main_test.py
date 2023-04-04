@@ -10,11 +10,12 @@ from PIL import Image, ImageTk
 from turtle import bgpic, position
 from controller_prema_GUI.plant_controller import PlantController
 from controller_prema_GUI.pot_controller import PotController
-from controller_prema_GUI.users_controler import UsersController
+from controller_prema_GUI.users_controlers import UsersController
 from service_prema_db.plant_service import PlantService
 from service_prema_db.pot_service import PotService
 from service_prema_db.users_service import UsersService
-import tkinter as tk
+
+# import tkinter as tk
 
 connection_uri = "mongodb://localhost:27017/"
 
@@ -35,6 +36,7 @@ def main():
     my_users_service = UsersService(
         connection_uri, database_name, collection_name_users
     )
+    my_users_service.find_all_users()
 
     my_pot_controller = PotController(
         connection_uri, database_name, collection_name_pots
