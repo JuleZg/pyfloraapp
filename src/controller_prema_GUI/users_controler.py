@@ -10,8 +10,11 @@ class UsersController:
             connection_uri, database_name, collection_name_users
         )
 
-    def get_all_users(self):
+    def find_all_users(self):
         return self.service.get_all_users()
+
+    def find_user(self, username):
+        return self.service.find_user(username)
 
     def add_user(self, username, password, first_name, last_name, email):
         return self.service.add_user(username, password, first_name, last_name, email)

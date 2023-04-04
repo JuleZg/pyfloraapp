@@ -36,9 +36,6 @@ def main():
         connection_uri, database_name, collection_name_users
     )
 
-    print()
-    my_users_service.find_user("jozo")
-
     my_pot_controller = PotController(
         connection_uri, database_name, collection_name_pots
     )

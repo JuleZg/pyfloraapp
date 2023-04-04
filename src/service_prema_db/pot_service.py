@@ -14,7 +14,7 @@ class PotService:
         self.collection = self.database[collection_name]  # spajanje na collection
 
     # get_all_pots
-    def get_all_pots(self):  # -> List[dict]-> JE ZA RETURN TYPE
+    def find_all_pots(self):  # -> List[dict]-> JE ZA RETURN TYPE
         try:
             pots = self.collection.find()
             print("\n".join([str(pot) for pot in pots]))
@@ -25,14 +25,14 @@ class PotService:
             return []
 
     # get_pot_by_id
-    def get_pot_by_id(self, pot_id):
+    def find_pot_by_id(self, pot_id):
         id_obj = ObjectId(pot_id)  # KREIRAMO ID_OBJECT TIPA ObjectId
         pot_dict = self.collection.find_one({"_id": id_obj})
         print(f"NASLI POT  {pot_dict['name']}")
         return pot_dict
 
     # get_pot_by_name
-    def get_pot_by_name(self, pot_name):
+    def find_pot_by_name(self, pot_name):
         pot_dict = self.collection.find_one({"name": pot_name})
         print(f"NASLI POT: {pot_dict['name']}")
         return pot_dict

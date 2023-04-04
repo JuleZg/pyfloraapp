@@ -20,7 +20,7 @@ class PlantService:
         self.client.close()
 
     # get_all_plants
-    def get_all_plants(self):
+    def find_all_plants(self):
         try:
             plants = self.collection.find()
             print("\n".join([str(plant) for plant in plants]))
@@ -30,14 +30,14 @@ class PlantService:
             return []
 
     # get_plant_by_id
-    def get_plant_by_id(self, id):
+    def find_plant_by_id(self, id):
         id_obj = ObjectId(id)
         plant_dict = self.collection.find_one({"_id": id_obj})
         print(f"Plant found:  {plant_dict['name']}")
         return plant_dict
 
     # get_plant_by_name
-    def get_plant_by_name(self, plant_name):
+    def find_plant_by_name(self, plant_name):
         plant_dict = self.collection.find_one({"name": plant_name})
         print(f"Plant found: {plant_dict['name']}")
         return plant_dict

@@ -13,7 +13,7 @@ class UsersService:
         self.collection = self.database[collection_name]
 
     # get_all_users
-    def get_all_users(self):
+    def find_all_users(self):
         try:
             users = self.collection.find()
             print("\n".join([str(user) for user in users]))
