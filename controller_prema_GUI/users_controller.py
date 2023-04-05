@@ -11,7 +11,7 @@ class UsersController:
         )
 
     def find_all_users(self):
-        return self.service.get_all_users()
+        return self.service.find_all_users()
 
     def find_user(self, username):
         return self.service.find_user(username)

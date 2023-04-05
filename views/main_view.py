@@ -2,11 +2,11 @@ from PIL import Image, ImageTk
 import tkinter as tk
 
 
-def main():
+def main_view():
 
     window = tk.Tk()
 
-    window.title("Plant View")
+    window.title("Main View")
 
     window.geometry("1920x1080")
 
@@ -20,7 +20,3 @@ def main():
     window.geometry(f"+{x}+{y}")
 
     window.mainloop()
-
-
-if __name__ == "__main__":
-    main()

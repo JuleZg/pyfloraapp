@@ -3,7 +3,6 @@ from os import name
 from typing import Collection
 import pymongo
 from pymongo.errors import PyMongoError
-from tkinter import messagebox
 
 
 class UsersService:
@@ -12,7 +11,7 @@ class UsersService:
         self.database = self.client[database_name]
         self.collection = self.database[collection_name]
 
-    # get_all_users
+    # find_all_users
     def find_all_users(self):
         try:
             users = self.collection.find()
@@ -27,11 +26,10 @@ class UsersService:
         try:
             user = self.collection.find_one({"username": username})
             if user:
-                print(user)
+                # print(user)
                 return user
             else:
-                print("User not found")
-                return None
+                return print("User not found")
         except PyMongoError as e:
             print(f"An error occurred while getting the user {username}: {e}")
             return None
@@ -46,7 +44,7 @@ class UsersService:
             "email": email,
         }
         new_user = self.collection.insert_one(user_data)
-        print(user_data["username"])
+        # print(user_data["username"])
         return user_data
 
     # delete_user_by_username
