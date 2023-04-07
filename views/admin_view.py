@@ -86,8 +86,9 @@ def admin_view(my_users_service):
     window = tk.Tk()
     window.title("Admin View")
     # background
-    img = Image.open("plant_img/admin_view_bg.png")
-    bg_img = ImageTk.PhotoImage(img)
+    img = Image.open("plant_img/admin_view_bg2.png")
+    # bg_img = ImageTk.PhotoImage(img)
+    bg_img = ImageTk.PhotoImage(img.resize((1920, 1000)))
     bg_label = tk.Label(window, image=bg_img)
     bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
@@ -120,23 +121,23 @@ def admin_view(my_users_service):
         header_frame,
         text="Close Admin View",
         command=window.destroy,
-        bg="white",
-        fg="blue",
+        bg="#e3dfe0",
+        fg="#0000cd",
         font=("Roboto Mono", 12),
         relief="flat",
     )
     dashboard_button.pack(side="right", padx=10)
 
     # Create a second header frame with a red background color
-    add_delete_frame = tk.Frame(window, background="red", padx=20, pady=10)
+    add_delete_frame = tk.Frame(window, padx=20, pady=10, bg="#e3dfe0")
     add_delete_frame.pack(side="top", fill="x")
 
     add_delete_label = tk.Label(
         add_delete_frame,
         text="Add/Delete User",
         font=("Roboto Mono", 14),
-        fg="white",
-        bg="red",
+        fg="#0000cd",
+        bg="#e3dfe0",
     )
     add_delete_label.place(relx=0.5, rely=0.5, anchor="center")
 
@@ -146,9 +147,9 @@ def admin_view(my_users_service):
         text="Delete selected user",
         command=delete_selected_user,
         font=("Roboto Mono", 12),
-        bg="white",
-        fg="red",
-        relief="flat",
+        bg="#e3dfe0",
+        fg="#0000cd",
+        relief="raised",
     )
     delete_user.pack(side="right", padx=10)
 
@@ -158,14 +159,13 @@ def admin_view(my_users_service):
         text="Add new user",
         command=add_new_user,
         font=("Roboto Mono", 12),
-        bg="white",
-        fg="red",
-        relief="flat",
+        bg="#e3dfe0",
+        fg="#0000cd",
+        relief="raised",
     )
     add_user.pack(side="left", padx=10)
 
     # user table frame and table
-
     user_table_frame = tk.Frame(window)
     user_table_frame.pack(side="bottom", fill="y", expand=True)
 
