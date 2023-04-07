@@ -45,12 +45,18 @@ TODO:    4. Evidencija PyFloraPosuda
 TODO:    5. Baza podataka u koju će biti pohranjeni svi podaci. SQLite je sasvim dovoljan za ovaj tip aplikacije, ali ako želite možete koristiti i neku drugu bazu podataka.
 
 
-The admin view window could have a header with the page title, such as "User Management," and a button to log out or return to the dashboard.
+There are several sensors that can be used to monitor plant data, including:
 
-Below the header, the user table could be displayed with columns for Name, Email, Role, and any other relevant information. Each row of the table would represent a different user and include an Edit button and a Delete button.
+Soil moisture sensors: These sensors measure the water content of the soil and can help you determine when it's time to water your plants.
 
-The Add User button could be located above or to the side of the user table, and be styled differently from the other buttons, perhaps using a contrasting color or a plus sign icon.
+Light sensors: These sensors can help you monitor the amount of light your plants are receiving, which is important for photosynthesis and growth.
 
-To improve navigation, you could include filters or search functionality at the top of the table, allowing the admin to quickly find specific users or groups of users.
+Temperature sensors: These sensors can help you monitor the temperature of your plants' environment, which can affect their growth and overall health.
 
-Finally, ensure that the user interface is visually appealing and easy to navigate, using a consistent design language throughout the page and including clear and concise labeling for each button.
+Humidity sensors: These sensors can help you monitor the humidity level of your plants' environment, which can affect their growth and susceptibility to disease.
+
+pH sensors: These sensors can help you monitor the pH level of the soil, which is important for proper nutrient uptake by the plants.
+
+CO2 sensors: These sensors can help you monitor the carbon dioxide levels in the air, which is important for photosynthesis.
+
+Nutrient sensors: These sensors can help you monitor the levels of various nutrients in the soil, which is important for the overall health and growth of your plants.

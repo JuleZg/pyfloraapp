@@ -6,7 +6,7 @@ def user_view(user, my_pot_service, my_plant_service):
     user_id = str(user["_id"])
     window.title("User View")
     all_pots = my_pot_service.find_all_pots(user_id)  # TODO OVO SMO PROMIJENILI
-    window.geometry("1920x1080")
+    window.geometry("1920x1000")
 
     # get the screen width and height
     screen_width = window.winfo_screenwidth()
