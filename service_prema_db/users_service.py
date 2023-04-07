@@ -14,17 +14,21 @@ class UsersService:
     # find_all_users
     def find_all_users(self):
         try:
-            users = self.collection.find()
+            users = list(self.collection.find())
             print("\n".join([str(user) for user in users]))
-            return [user for user in users]
+            count = self.collection.count_documents({})
+            print(f"Number of documents in the collection: {count}")
+            return users
         except PyMongoError as e:
             print(f"An error occurred while getting all users {e}")
             return []
 
     # find_user
-    def find_user(self, username):
+    def find_user(self, username, password):
         try:
-            user = self.collection.find_one({"username": username})
+            user = self.collection.find_one(
+                {"username": username, "password": password}
+            )
             if user:
                 # print(user)
                 return user
@@ -48,7 +52,7 @@ class UsersService:
         return user_data
 
     # delete_user_by_username
-    def del_user(self, username):
+    def delete_user(self, username):
         user_dict = self.collection.find_one_and_delete({"username": username})
         if user_dict is not None:
             print("Deleted user:", user_dict["username"])

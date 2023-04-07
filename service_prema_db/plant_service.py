@@ -43,7 +43,7 @@ class PlantService:
         return plant_dict
 
     # delete_plant_by_id
-    def delete_plant_by_id(self, id):
+    def delete_plant_by_id(self, id): #TODO: U SVAKU FUNCKIJU PROSLIJEDIT ID_USERA KAO U 
         id_obj = ObjectId(id)
         plant_dict_name = self.collection.find_one({"_id": id_obj})
         print(f"Deleted plant : {plant_dict_name['name']}\n{plant_dict_name}")
@@ -53,12 +53,13 @@ class PlantService:
     # update_plant_notes
     def update_plant_notes(self, id, notes):
         id_obj = ObjectId(id)
-        plant_dict_name = self.collection.find_one({"_id": id_obj})
+        plant_dict_name = list(self.collection.find_one({"_id": id_obj})) #TODO: SVE U LIST STAVLJAT GDJE IMAS FIND
         plant_dict_notes = {"$set": {"notes": notes}}
         self.collection.update_one({"_id": id_obj}, plant_dict_notes)
-        return print(
+        print(
             f"Notes updated for plant '{plant_dict_name['name']}', and with note '{notes}' "
         )
+        return plant_dict_name
 
     # insert img to plants collection
 

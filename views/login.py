@@ -4,31 +4,30 @@ import tkinter as tk
 from tkinter import messagebox
 from matplotlib.pyplot import show
 from os import name
-from views.main_view import main_view
-from service_prema_db.users_service import UsersService
+from views.admin_view import admin_view
+from views.user_view import user_view
 
 
-def login_gui():
+def login_gui(my_users_service, my_pot_service, my_plant_service):
     def login_calback():
-        connection_uri = "mongodb://localhost:27017/"
-        database_name = "pyflora"
-        collection_name_users = "users"
-        my_users_service = UsersService(
-            connection_uri, database_name, collection_name_users
-        )
+
         username = username_entry.get()
         password = password_entry.get()
-        user = my_users_service.find_user(username)
-        if user is None:
-            messagebox.showerror("Error", "Invalid username")
+        user = my_users_service.find_user(username, password)
+        if len(username) == 0:
+            messagebox.showerror("Error", "Username can't be empty")
         elif len(password) == 0:
-            messagebox.showerror("Error", "Password cant be empty")
-        elif password != user["password"]:
-            messagebox.showerror("Error", "Incorrect password")
-        else:
+            messagebox.showerror("Error", "Password can't be empty")
+        elif user is None:
+            messagebox.showerror("Error", "User not found")
+        elif user["username"] == "admin":
             messagebox.showinfo("Success", "Login successful")
             window.destroy()
-            main_view()
+            admin_view(my_users_service)
+        elif user:
+            messagebox.showinfo("Success", "Login successful")
+            window.destroy()
+            user_view(user, my_pot_service, my_plant_service)
 
     # Create a new tkinter window
     window = tk.Tk()

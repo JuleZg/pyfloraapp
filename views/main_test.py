@@ -13,6 +13,7 @@ collection_name_users = "users"
 
 
 def main():
+
     my_plant_service = PlantService(
         connection_uri, database_name, collection_name_plants
     )

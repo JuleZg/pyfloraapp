@@ -1,6 +1,7 @@
 # pyfloraapp
 TODO: opis aplikacije, upute
 
+
 TODO:    1. Prijava u aplikaciju.
             predefinirani korisnik koji može uređivati svoje korisničke podatke
             obvezna polja, skrivanje prikaza podataka u poljima tijekom unosa
@@ -44,3 +45,12 @@ TODO:    4. Evidencija PyFloraPosuda
 TODO:    5. Baza podataka u koju će biti pohranjeni svi podaci. SQLite je sasvim dovoljan za ovaj tip aplikacije, ali ako želite možete koristiti i neku drugu bazu podataka.
 
 
+The admin view window could have a header with the page title, such as "User Management," and a button to log out or return to the dashboard.
+
+Below the header, the user table could be displayed with columns for Name, Email, Role, and any other relevant information. Each row of the table would represent a different user and include an Edit button and a Delete button.
+
+The Add User button could be located above or to the side of the user table, and be styled differently from the other buttons, perhaps using a contrasting color or a plus sign icon.
+
+To improve navigation, you could include filters or search functionality at the top of the table, allowing the admin to quickly find specific users or groups of users.
+
+Finally, ensure that the user interface is visually appealing and easy to navigate, using a consistent design language throughout the page and including clear and concise labeling for each button.

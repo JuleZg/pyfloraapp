@@ -14,12 +14,12 @@ class PotService:
         self.collection = self.database[collection_name]  # spajanje na collection
 
     # get_all_pots
-    def find_all_pots(self):  # -> List[dict]-> JE ZA RETURN TYPE
+    def find_all_pots(self, user_id):  # -> List[dict]-> JE ZA RETURN TYPE
         try:
-            pots = self.collection.find()
+            pots = list(self.collection.find({"user_id": user_id}))
             print("\n".join([str(pot) for pot in pots]))
 
-            return [pot for pot in pots]
+            return pots
         except PyMongoError as e:
             print(f"An error occurred while getting all plants: {e}")
             return []
@@ -48,3 +48,23 @@ class PotService:
     # TODO: add_plant_to_pot
     def add_plant_to_pot(self, plant_id, pot_id):
         print("not implemented")
+
+    def create_new_pot(self, pot_name, pot_color, material, user_id):
+        try:
+            pot_dict = {
+                "name": pot_name,
+                "color": pot_color,
+                "material": material,
+                "user_id": user_id,
+                "plant_id": None,  # we'll update this later when the user adds a plant to the pot
+            }
+            result = self.collection.insert_one(pot_dict)
+            if result.inserted_id:
+                print(f"Created new pot with ID: {result.inserted_id}")
+                return result.inserted_id
+            else:
+                print("Failed to create new pot")
+                return None
+        except PyMongoError as e:
+            print(f"An error occurred while creating a new pot: {e}")
+            return None

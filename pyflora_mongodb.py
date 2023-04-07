@@ -21,7 +21,7 @@ db = client["pyflora"]
 # Create a collection for the users
 collection_name = "users"
 collection = db[collection_name]
-# drop_collection(collection_name, db)
+drop_collection(collection_name, db)
 users = [
     {
         "username": "admin",
@@ -31,6 +31,7 @@ users = [
         "email": "email@mail.com",
     }
 ]
+
 
 # Insert the user data into the collection
 collection.insert_many(users)
