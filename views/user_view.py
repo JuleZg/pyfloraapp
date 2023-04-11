@@ -1,19 +1,48 @@
 import tkinter as tk
-import datetime
 from tkinter import ttk
 import random
+from tkinter.messagebox import askokcancel
+import requests
+import datetime
 
 
 def user_view():
     FONT = ("Roboto Mono", 12)
 
+    def on_closing():
+        if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
+            window.destroy()
+
+    def temp_data():
+        MY_LAT = 45.790152  # Your latitude
+        MY_LONG = 16.005303  # Your longitude
+        MY_API = "b8fe2d48edaec121636871ffc793be7e"
+
+        # Construct the API request URL
+        api_url = f"https://api.openweathermap.org/data/2.5/weather?lat={MY_LAT}&lon={MY_LONG}&appid={MY_API}&units=metric"
+
+        # Send the API request and get the response
+        response = requests.get(api_url)
+        response_data = response.json()
+
+        # Extract the temperature from the response data for the current hour
+        temperature = response_data["main"]["temp"]
+        print(
+            f"The current temperature at ({MY_LAT}, {MY_LONG}) is {temperature:.1f}°C"
+        )
+        return temperature
+
     def update_time():
         now = datetime.datetime.now()
-        date_time_label.config(text=now.strftime("%d.%m.%Y %H:%M:%S"))
+        date_time_label.config(
+            text=now.strftime("%d.%m.%Y %H:%M:%S")
+            + "\n Temperature: {:.1f}°C".format(temp_data())
+        )
         window.after(1000, update_time)
 
     window = tk.Tk()
     window.geometry("1920x1000")
+    window.protocol("WM_DELETE_WINDOW", on_closing)
 
     # get the screen width and height
     screen_width = window.winfo_screenwidth()
@@ -25,10 +54,7 @@ def user_view():
     window.geometry(f"+{x}+{y}")
 
     # header frame
-    header_frame = tk.Frame(window)
-    header_frame.pack(fill="x")
-
-    header_frame = tk.Frame(header_frame, bg="blue", height=60)
+    header_frame = tk.Frame(window, bg="blue", height=60)
     header_frame.pack(fill="x")
 
     # header date, time, temperature
@@ -47,29 +73,24 @@ def user_view():
         text="Log Out",
         bg="red",
         font=FONT,
-        command=window.destroy,
+        command=on_closing,
         relief="raised",
     )
     log_out_btn.pack(side="right", padx=20)
 
     # sensor_chart_frame
-    sensor_chart_frame = tk.Frame(window)
-    sensor_chart_frame.pack()
+    sensor_chart_frame = tk.Frame(window, bg="green")
+    sensor_chart_frame.pack(fill="x")
 
     # create a sub-frame within the sensor_chart_frame to hold the sensor_monitor_app content
-    sensor_monitor_frame = tk.Frame(sensor_chart_frame)
+    sensor_monitor_frame = tk.Frame(sensor_chart_frame, bg="purple")
     sensor_monitor_frame.pack(side="left")
 
     # sensor gui
     def sync_data():
         # LIGHT SENSOR READINGS
-
-        # Define the number of values to generate
         num_values = 5
-
-        # Generate random light sensor values within the range of 0-100
         light_values = [random.randint(0, 100) for i in range(num_values)]
-
         # Grade the values based on the provided categories
         light_grades = []
         for value in light_values:
@@ -187,10 +208,11 @@ def user_view():
             sync_value, sync_value_grade
         )
 
-        temp_label["text"] = "Temperature: {}".format(temp_data)
+        temp_label["text"] = "Temperature: {:.1f}".format(temp_data())
 
     sensors_frame = ttk.LabelFrame(sensor_monitor_frame, text="Sensors Data")
     sensors_frame.grid(column=0, row=0, padx=10, pady=10)
+    sensors_frame.columnconfigure(0, minsize=420)
 
     sync_button = ttk.Button(sensor_monitor_frame, text="Sync", command=sync_data)
     sync_button.grid(column=1, row=0, padx=10, pady=10)
@@ -209,6 +231,31 @@ def user_view():
 
     temp_label = ttk.Label(sensors_frame, text="Temperature: N/A", justify="left")
     temp_label.grid(column=0, row=4, sticky="w")
+
+    chart_frame = tk.Frame(sensor_chart_frame, bg="red")
+    chart_frame.pack(fill="both", expand=True)
+    chart_frame.propagate = False
+    sensors_frame.rowconfigure(0, minsize=200)
+
+    chart_frame1 = tk.Label(chart_frame, text="chart1", bg="blue")
+    chart_frame2 = tk.Label(chart_frame, text="chart 2", bg="orange")
+    chart_frame3 = tk.Label(chart_frame, text="chart 3", bg="yellow")
+
+    # Use grid to position the label widgets in the chart_frame and make them fill all the space
+    chart_frame1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    chart_frame2.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    chart_frame3.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+    # Configure the grid to fill the available space
+    chart_frame.columnconfigure(0, weight=1)
+    chart_frame.columnconfigure(1, weight=1)
+    chart_frame.columnconfigure(2, weight=1)
+    chart_frame.rowconfigure(0, weight=1)
+
+    # Center the text inside the label widgets
+    chart_frame1.config(anchor="center")
+    chart_frame2.config(anchor="center")
+    chart_frame3.config(anchor="center")
 
     update_time()  # start updating the time label
     window.mainloop()

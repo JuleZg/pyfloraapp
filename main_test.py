@@ -4,6 +4,7 @@ from service_prema_db.users_service import UsersService
 from views.login import login_gui
 from views.user_view import user_view
 import sys
+
 print("\n".join(sys.path))
 # import tkinter as tk
 

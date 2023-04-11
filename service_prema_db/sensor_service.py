@@ -132,8 +132,8 @@ def sensor_monitor_app():
 
         temp_label["text"] = "Temperature: {}".format(temp_data)
 
-    #window = tk.Tk()
-    #window.title("Sensor Monitor")
+    window = tk.Tk()
+    window.title("Sensor Monitor")
 
     sensors_frame = ttk.LabelFrame(window, text="Sensors Data")
     sensors_frame.grid(column=0, row=0, padx=10, pady=10)

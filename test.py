@@ -1,27 +1,28 @@
-import tkinter as tk
+MY_LAT = 45.815010  # Your latitude
+MY_LONG = 15.981919  # Your longitude
+API_KEY = "b8fe2d48edaec121636871ffc793be7e"
 
-def create_new_window():
-    new_window = tk.Toplevel(window)
-    # configure new_window as desired
-    new_window.title("New Window")
-    new_window.geometry("400x400")
-    new_window.configure(bg="white")
-    # add widgets to new_window
-    label = tk.Label(new_window, text="This is a new window")
-    label.pack()
-
-# add button to main window to create new window
-new_window_button = tk.Button(window, text="New Window", command=create_new_window)
-new_window_button.pack()
-
-# create the main window
-root = tk.Tk()
-
-# add a button to create a new window
-button = tk.Button(root, text="Create New Window", command=create_new_window)
-button.pack()
+import requests
+from datetime import datetime, timedelta
 
 
+def temp_data():
+            MY_LAT = 45.790152  # Your latitude
+            MY_LONG = 16.005303  # Your longitude
+            MY_API = "b8fe2d48edaec121636871ffc793be7e"
 
-# start the main event loop
-root.mainloop()
+            # Construct the API request URL
+            api_url = f"https://api.openweathermap.org/data/2.5/weather?lat={MY_LAT}&lon={MY_LONG}&appid={MY_API}&units=metric"
+
+            # Send the API request and get the response
+            response = requests.get(api_url)
+            response_data = response.json()
+
+            # Extract the temperature from the response data for the current hour
+            temperature = response_data["main"]["temp"]
+            city=response_data["name"]
+            print(
+                f"The current temperature {city} is {temperature:.1f}°C"
+            )
+            return temperature
+temp_data()

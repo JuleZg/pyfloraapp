@@ -2,9 +2,14 @@ from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import ttk
 
+from views.user_view import user_view
 
 
 def admin_view(my_users_service):
+    def on_closing():
+        if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
+            window.destroy()
+
     # methods for add new user, delete selected user
     def repopulate_user_table(all_users):
         user_table.delete(*user_table.get_children())
@@ -119,7 +124,7 @@ def admin_view(my_users_service):
     dashboard_button = tk.Button(
         header_frame,
         text="Close Admin View",
-        command=window.destroy,
+        command=on_closing,
         bg="#e3dfe0",
         fg="#0000cd",
         font=("Roboto Mono", 12),
