@@ -1,8 +1,7 @@
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import ttk
-
-from views.user_view import user_view
+import datetime
 
 
 def admin_view(my_users_service):
@@ -87,6 +86,11 @@ def admin_view(my_users_service):
         )
         submit_button.pack()
 
+    def update_time():
+        now = datetime.datetime.now()
+        date_time_label.config(text=now.strftime("%d.%m.%Y %H:%M:%S").format())
+        window.after(1000, update_time)
+
     window = tk.Tk()
     window.title("Admin View")
     # background
@@ -95,14 +99,12 @@ def admin_view(my_users_service):
     bg_img = ImageTk.PhotoImage(img.resize((1920, 1000)))
     bg_label = tk.Label(window, image=bg_img)
     bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-
     all_users = my_users_service.find_all_users()
     window.geometry("1920x1000")
-
+    FONT = ("Roboto Mono", 12)
     # get the screen width and height
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
-
     # calculate the x and y coordinates to center the window
     x = (screen_width // 2) - (1920 // 2)
     y = (screen_height // 2) - (1080 // 2)
@@ -111,13 +113,8 @@ def admin_view(my_users_service):
     # Create a header frame with a title label and a button to return to the dashboard
     header_frame = tk.Frame(window, bg="blue", padx=20, pady=10)
     header_frame.pack(side="top", fill="x")
-
     title_label = tk.Label(
-        header_frame,
-        text="USER MANAGMENT",
-        font=("Roboto Mono", 16),
-        fg="white",
-        bg="blue",
+        header_frame, text="USER MANAGMENT", font=FONT, fg="white", bg="blue"
     )
     title_label.place(relx=0.5, rely=0.5, anchor="center")
 
@@ -127,10 +124,13 @@ def admin_view(my_users_service):
         command=on_closing,
         bg="#e3dfe0",
         fg="#0000cd",
-        font=("Roboto Mono", 12),
-        relief="flat",
+        font=FONT,
+        relief="raised",
     )
     dashboard_button.pack(side="right", padx=10)
+
+    date_time_label = tk.Label(header_frame, font=FONT)
+    date_time_label.pack(side="left", padx=10)
 
     # Create a second header frame with a red background color
     add_delete_frame = tk.Frame(window, padx=20, pady=10, bg="#e3dfe0")
@@ -139,7 +139,7 @@ def admin_view(my_users_service):
     add_delete_label = tk.Label(
         add_delete_frame,
         text="Add/Delete User",
-        font=("Roboto Mono", 14),
+        font=FONT,
         fg="#0000cd",
         bg="#e3dfe0",
     )
@@ -150,7 +150,7 @@ def admin_view(my_users_service):
         add_delete_frame,
         text="Delete selected user",
         command=delete_selected_user,
-        font=("Roboto Mono", 12),
+        font=FONT,
         bg="#e3dfe0",
         fg="#0000cd",
         relief="raised",
@@ -162,7 +162,7 @@ def admin_view(my_users_service):
         add_delete_frame,
         text="Add new user",
         command=add_new_user,
-        font=("Roboto Mono", 12),
+        font=FONT,
         bg="#e3dfe0",
         fg="#0000cd",
         relief="raised",
@@ -202,5 +202,5 @@ def admin_view(my_users_service):
                 user["email"],
             ),
         )
-
+    update_time()
     window.mainloop()

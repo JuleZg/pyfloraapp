@@ -58,7 +58,7 @@ def user_view():
     header_frame.pack(fill="x")
 
     # header date, time, temperature
-    date_time_label = tk.Label(header_frame, bg="green", font=FONT)
+    date_time_label = tk.Label(header_frame, font=FONT)
     date_time_label.pack(side="left", padx=20)
 
     # header app name
@@ -79,11 +79,11 @@ def user_view():
     log_out_btn.pack(side="right", padx=20)
 
     # sensor_chart_frame
-    sensor_chart_frame = tk.Frame(window, bg="green")
+    sensor_chart_frame = tk.Frame(window)
     sensor_chart_frame.pack(fill="x")
 
     # create a sub-frame within the sensor_chart_frame to hold the sensor_monitor_app content
-    sensor_monitor_frame = tk.Frame(sensor_chart_frame, bg="purple")
+    sensor_monitor_frame = tk.Frame(sensor_chart_frame)
     sensor_monitor_frame.pack(side="left")
 
     # sensor gui
@@ -208,10 +208,11 @@ def user_view():
             sync_value, sync_value_grade
         )
 
-        temp_label["text"] = "Temperature: {:.1f}".format(temp_data())
+        temp_label["text"] = "Temperature: \t{:.1f}".format(temp_data())
 
     sensors_frame = ttk.LabelFrame(sensor_monitor_frame, text="Sensors Data")
     sensors_frame.grid(column=0, row=0, padx=10, pady=10)
+    # sensors_frame.rowconfigure(0, minsize=200)
     sensors_frame.columnconfigure(0, minsize=420)
 
     sync_button = ttk.Button(sensor_monitor_frame, text="Sync", command=sync_data)
@@ -232,10 +233,11 @@ def user_view():
     temp_label = ttk.Label(sensors_frame, text="Temperature: N/A", justify="left")
     temp_label.grid(column=0, row=4, sticky="w")
 
+    # CHART FRAME
     chart_frame = tk.Frame(sensor_chart_frame, bg="red")
     chart_frame.pack(fill="both", expand=True)
     chart_frame.propagate = False
-    sensors_frame.rowconfigure(0, minsize=200)
+    chart_frame.rowconfigure(0, minsize=300)
 
     chart_frame1 = tk.Label(chart_frame, text="chart1", bg="blue")
     chart_frame2 = tk.Label(chart_frame, text="chart 2", bg="orange")
@@ -261,4 +263,4 @@ def user_view():
     window.mainloop()
 
 
-user_view()
+# user_view()
