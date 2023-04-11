@@ -30,7 +30,7 @@ class UsersService:
                 {"username": username, "password": password}
             )
             if user:
-                # print(user)
+                print(user)
                 return user
             else:
                 return print("User not found")

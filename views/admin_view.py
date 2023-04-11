@@ -1,8 +1,7 @@
-from email.mime import image
-from tkinter import font
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import ttk
+
 
 
 def admin_view(my_users_service):

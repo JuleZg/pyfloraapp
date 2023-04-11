@@ -27,7 +27,7 @@ for i in range(num_values):
         f"Sample {i+1}: Light sensor reading = {light_values[i]}, Grade = {grades[i]}"
     )
 
-sync_value_index = random.randint(0, num_values-1)
+sync_value_index = random.randint(0, num_values - 1)
 sync_value = light_values[sync_value_index]
 sync_value_grade = grades[sync_value_index]
 

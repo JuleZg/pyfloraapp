@@ -2,7 +2,9 @@ from service_prema_db.plant_service import PlantService
 from service_prema_db.pot_service import PotService
 from service_prema_db.users_service import UsersService
 from views.login import login_gui
-
+from views.user_view import user_view
+import sys
+print("\n".join(sys.path))
 # import tkinter as tk
 
 connection_uri = "mongodb://localhost:27017/"

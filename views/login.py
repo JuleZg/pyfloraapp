@@ -10,7 +10,6 @@ from views.user_view import user_view
 
 def login_gui(my_users_service, my_pot_service, my_plant_service):
     def login_calback():
-
         username = username_entry.get()
         password = password_entry.get()
         user = my_users_service.find_user(username, password)
@@ -24,10 +23,11 @@ def login_gui(my_users_service, my_pot_service, my_plant_service):
             messagebox.showinfo("Success", "Login successful")
             window.destroy()
             admin_view(my_users_service)
-        elif user:
+        else:
+            user != "admin"
             messagebox.showinfo("Success", "Login successful")
             window.destroy()
-            user_view(user, my_pot_service, my_plant_service)
+            user_view()
 
     # Create a new tkinter window
     window = tk.Tk()
@@ -60,6 +60,7 @@ def login_gui(my_users_service, my_pot_service, my_plant_service):
         font=font,
     )
     welcome_label.place(relx=0.5, y=40, anchor=tk.CENTER)
+
     # label for the username
     username_label = tk.Label(
         window, text="Username:", padx=10, pady=10, bg="#f5f6f8", font=font

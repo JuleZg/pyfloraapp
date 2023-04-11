@@ -1,5 +1,3 @@
-from controller_prema_GUI.plant_controller import PlantController
-from controller_prema_GUI.pot_controller import PotController
 from service_prema_db.plant_service import PlantService
 from service_prema_db.pot_service import PotService
 from service_prema_db.users_service import UsersService
@@ -51,15 +49,13 @@ def main():
         connection_uri, database_name, collection_name_users
     )
     # get_all_users
-    my_users_service.get_all_users()
+    #my_users_service.find_all_users()
     print()
-    my_users_service.find_user("jozo")
+    #my_users_service.find_user("jozo","jozo")
 
     ## POT CONTROLLER
     # connection on pot collection
-    my_pot_controller = PotController(
-        connection_uri, database_name, collection_name_pots
-    )
+    
     # my_pot_controller.get_all_pots()
     # print()
     # my_pot_controller.get_pot_by_name("Pot0")

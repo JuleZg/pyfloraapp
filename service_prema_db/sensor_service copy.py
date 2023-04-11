@@ -1,67 +1,44 @@
 import tkinter as tk
-import datetime
 from tkinter import ttk
+import requests
 import random
 
 
-def user_view():
-    FONT = ("Roboto Mono", 12)
+class SensorMonitorApp:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("Sensor Monitor")
 
-    def update_time():
-        now = datetime.datetime.now()
-        date_time_label.config(text=now.strftime("%d.%m.%Y %H:%M:%S"))
-        window.after(1000, update_time)
+        self.sensors_frame = ttk.LabelFrame(self.root, text="Sensors Data")
+        self.sensors_frame.grid(column=0, row=0, padx=10, pady=10)
 
-    window = tk.Tk()
-    window.geometry("1920x1000")
+        self.sync_button = ttk.Button(self.root, text="Sync", command=self.sync_data)
+        self.sync_button.grid(column=1, row=0, padx=10, pady=10)
 
-    # get the screen width and height
-    screen_width = window.winfo_screenwidth()
-    screen_height = window.winfo_screenheight()
+        self.moisture_label = ttk.Label(
+            self.sensors_frame, text="Moisture: N/A", justify="left"
+        )
+        self.moisture_label.grid(column=0, row=0, sticky="w")
 
-    # calculate the x and y coordinates to center the window
-    x = (screen_width // 2) - (1920 // 2)
-    y = (screen_height // 2) - (1080 // 2)
-    window.geometry(f"+{x}+{y}")
+        self.ph_label = ttk.Label(self.sensors_frame, text="pH: N/A", justify="left")
+        self.ph_label.grid(column=0, row=1, sticky="w")
 
-    # header frame
-    header_frame = tk.Frame(window)
-    header_frame.pack(fill="x")
+        self.salinity_label = ttk.Label(
+            self.sensors_frame, text="Salinity: N/A", justify="left"
+        )
+        self.salinity_label.grid(column=0, row=2, sticky="w")
 
-    header_frame = tk.Frame(header_frame, bg="blue", height=60)
-    header_frame.pack(fill="x")
+        self.light_label = ttk.Label(
+            self.sensors_frame, text="Light: N/A", justify="left"
+        )
+        self.light_label.grid(column=0, row=3, sticky="w")
 
-    # header date, time, temperature
-    date_time_label = tk.Label(header_frame, bg="green", font=FONT)
-    date_time_label.pack(side="left", padx=20)
+        self.temp_label = ttk.Label(
+            self.sensors_frame, text="Temperature: N/A", justify="left"
+        )
+        self.temp_label.grid(column=0, row=4, sticky="w")
 
-    # header app name
-    app_title_label = tk.Label(
-        header_frame, text="PyFlora - User View", bg="yellow", font=FONT
-    )
-    app_title_label.place(relx=0.5, rely=0.5, anchor="center")
-
-    # header logout button
-    log_out_btn = tk.Button(
-        header_frame,
-        text="Log Out",
-        bg="red",
-        font=FONT,
-        command=window.destroy,
-        relief="raised",
-    )
-    log_out_btn.pack(side="right", padx=20)
-
-    # sensor_chart_frame
-    sensor_chart_frame = tk.Frame(window)
-    sensor_chart_frame.pack()
-
-    # create a sub-frame within the sensor_chart_frame to hold the sensor_monitor_app content
-    sensor_monitor_frame = tk.Frame(sensor_chart_frame)
-    sensor_monitor_frame.pack(side="left")
-
-    # sensor gui
-    def sync_data():
+    def sync_data(self):
         # LIGHT SENSOR READINGS
 
         # Define the number of values to generate
@@ -174,44 +151,25 @@ def user_view():
         # Code to sync temperature data from the weather station
 
         # Update labels with new data
-        moisture_label["text"] = "Moisture Sensor: \t{} \tRange: {}".format(
+        self.moisture_label["text"] = "Moisture Sensor: \t{} \tRange: {}".format(
             round(sync_humidity_values, 2), sync_humidity_values_grade
         )
-        ph_label["text"] = "pH: \t\t{} \tGrade: {}".format(
+        self.ph_label["text"] = "pH: \t\t{} \tGrade: {}".format(
             round(sync_value_ph, 2), sync_value_ph_grade
         )
-        salinity_label["text"] = "Salinity: \t\t{}\tGrade: {}".format(
+        self.salinity_label["text"] = "Salinity: \t\t{}\tGrade: {}".format(
             round(sync_value_salinity, 2), sync_value_salinity_grade
         )
-        light_label["text"] = "Light Sensor: \t{} \tGrade: {}".format(
+        self.light_label["text"] = "Light Sensor: \t{} \tGrade: {}".format(
             sync_value, sync_value_grade
         )
 
-        temp_label["text"] = "Temperature: {}".format(temp_data)
+        self.temp_label["text"] = "Temperature: {}".format(temp_data)
 
-    sensors_frame = ttk.LabelFrame(sensor_monitor_frame, text="Sensors Data")
-    sensors_frame.grid(column=0, row=0, padx=10, pady=10)
-
-    sync_button = ttk.Button(sensor_monitor_frame, text="Sync", command=sync_data)
-    sync_button.grid(column=1, row=0, padx=10, pady=10)
-
-    moisture_label = ttk.Label(sensors_frame, text="Moisture: N/A", justify="left")
-    moisture_label.grid(column=0, row=0, sticky="w")
-
-    ph_label = ttk.Label(sensors_frame, text="pH: N/A", justify="left")
-    ph_label.grid(column=0, row=1, sticky="w")
-
-    salinity_label = ttk.Label(sensors_frame, text="Salinity: N/A", justify="left")
-    salinity_label.grid(column=0, row=2, sticky="w")
-
-    light_label = ttk.Label(sensors_frame, text="Light: N/A", justify="left")
-    light_label.grid(column=0, row=3, sticky="w")
-
-    temp_label = ttk.Label(sensors_frame, text="Temperature: N/A", justify="left")
-    temp_label.grid(column=0, row=4, sticky="w")
-
-    update_time()  # start updating the time label
-    window.mainloop()
+    def run(self):
+        self.root.mainloop()
 
 
-user_view()
+if __name__ == "__main__":
+    app = SensorMonitorApp()
+    app.run()

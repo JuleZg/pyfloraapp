@@ -21,7 +21,7 @@ db = client["pyflora"]
 # Create a collection for the users
 collection_name = "users"
 collection = db[collection_name]
-drop_collection(collection_name, db)
+# drop_collection(collection_name, db)
 users = [
     {
         "username": "admin",
@@ -46,68 +46,131 @@ collection = db[collection_name]
 drop_collection(collection_name, db)
 
 # Define the plant data
+
+
 plants = [
     {
         "name": "Rose",
         "type": "Flower",
         "watering": "Twice a week,",
-        "notes": "",
+        "description": "A popular flowering plant known for its sweet fragrance and variety of colors. Roses require regular watering and pruning to maintain their health and appearance.",
     },
     {
         "name": "Tomato",
         "type": "Vegetable",
         "watering": "Once a day",
-        "notes": "",
+        "description": "A commonly grown vegetable that is used in many different types of cuisine. Tomatoes require full sun and regular watering to produce ripe, juicy fruit.",
     },
     {
         "name": "Basil",
         "type": "Herb",
         "watering": "Every other day",
-        "notes": "",
+        "description": "An aromatic herb that is commonly used in Italian and other Mediterranean cuisine. Basil requires regular watering and pruning to maintain its flavor and appearance.",
     },
     {
         "name": "Lavender",
         "type": "Flower",
         "watering": "Once a week",
-        "notes": "",
+        "description": "A fragrant flowering plant that is often used in perfumes and soaps. Lavender requires full sun and well-draining soil to thrive.",
     },
     {
         "name": "Mint",
         "type": "Herb",
         "watering": "Every other day",
-        "notes": "",
+        "description": "A versatile herb that is used in a variety of dishes and beverages. Mint prefers partial shade and regular watering to keep its leaves from drying out.",
     },
     {
         "name": "Succulent",
         "type": "Cactus",
         "watering": "Once a month",
-        "notes": "",
+        "description": "A type of cactus that stores water in its leaves and stems, allowing it to survive in dry conditions. Succulents prefer bright, indirect light and infrequent watering to avoid root rot.",
     },
     {
         "name": "Snake plant",
         "type": "Indoor plant",
         "watering": "Once a month",
-        "notes": "",
+        "description": "A hardy indoor plant that is tolerant of low light and infrequent watering. Snake plants are known for their tall, upright leaves and air-purifying properties.",
     },
     {
         "name": "Fern",
         "type": "Indoor plant",
         "watering": "Twice a week",
-        "notes": "",
+        "description": "A common indoor plant that is known for its lush, green fronds. Ferns require high humidity and regular watering to keep their leaves from drying out.",
     },
     {
         "name": "Spider plant",
         "type": "Indoor plant",
         "watering": "Once a week",
-        "notes": "",
+        "description": "A popular indoor plant that is known for its long, spindly leaves and ability to tolerate low light and infrequent watering. Spider plants are also great air purifiers.",
     },
     {
         "name": "Aloe vera",
         "type": "Cactus",
         "watering": "Once a week",
-        "notes": "",
+        "description": "A succulent plant that is known for its medicinal properties and gel-filled leaves. Aloe vera plants prefer bright, indirect light and infrequent watering to avoid root rot.",
+    },
+    {
+        "name": "Sunflower",
+        "type": "Flower",
+        "watering": "Once a week",
+        "description": "A large, cheerful flower that is popular in gardens and as a cut flower. Sunflowers require full sun and regular watering to reach their full potential.",
+    },
+    {
+        "name": "Zucchini",
+        "type": "Vegetable",
+        "watering": "Once a day",
+        "description": "A summer squash that is versatile in cooking and easy to grow. Zucchini plants require full sun and regular watering to produce their edible fruit.",
+    },
+    {
+        "name": "Rosemary",
+        "type": "Herb",
+        "watering": "Once a week",
+        "description": "An aromatic herb that is commonly used in Mediterranean cuisine. Rosemary prefers full sun and well-draining soil.",
+    },
+    {
+        "name": "Daisy",
+        "type": "Flower",
+        "watering": "Twice a week",
+        "description": "A classic, cheerful flower that is commonly found in gardens and floral arrangements. Daisies prefer full sun and regular watering.",
+    },
+    {
+        "name": "Thyme",
+        "type": "Herb",
+        "watering": "Every other day",
+        "description": "A flavorful herb that is commonly used in Mediterranean and Middle Eastern cuisine. Thyme prefers full sun and well-draining soil.",
+    },
+    {
+        "name": "Jade plant",
+        "type": "Cactus",
+        "watering": "Once a month",
+        "description": "A succulent plant with small, round leaves that is commonly grown as a houseplant. Jade plants prefer bright, indirect light and infrequent watering.",
+    },
+    {
+        "name": "Pothos",
+        "type": "Indoor plant",
+        "watering": "Once a week",
+        "description": "A trailing indoor plant with variegated leaves that is easy to care for. Pothos prefer bright, indirect light and regular watering.",
+    },
+    {
+        "name": "Peace lily",
+        "type": "Indoor plant",
+        "watering": "Once a week",
+        "description": "A tropical indoor plant with large, glossy leaves and white flowers. Peace lilies prefer bright, indirect light and regular watering.",
+    },
+    {
+        "name": "Eucalyptus",
+        "type": "Herb",
+        "watering": "Every other day",
+        "description": "An aromatic herb with silver-green leaves that is commonly used in aromatherapy and as a decorative accent. Eucalyptus prefers full sun and well-draining soil.",
+    },
+    {
+        "name": "Cactus",
+        "type": "Cactus",
+        "watering": "Once a month",
+        "description": "A type of succulent plant that comes in many shapes and sizes, often with prickly spines. Cacti prefer bright, indirect light and infrequent watering.",
     },
 ]
+
 
 # Insert the plant data into the collection
 collection.insert_many(plants)
