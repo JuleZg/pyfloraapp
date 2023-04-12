@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 import random
 from tkinter.messagebox import askokcancel
 import requests
@@ -7,86 +6,6 @@ import datetime
 
 
 def user_view():
-    FONT = ("Roboto Mono", 12)
-
-    def on_closing():
-        if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
-            window.destroy()
-
-    def temp_data():
-        MY_LAT = 45.790152  # Your latitude
-        MY_LONG = 16.005303  # Your longitude
-        MY_API = "b8fe2d48edaec121636871ffc793be7e"
-
-        # Construct the API request URL
-        api_url = f"https://api.openweathermap.org/data/2.5/weather?lat={MY_LAT}&lon={MY_LONG}&appid={MY_API}&units=metric"
-
-        # Send the API request and get the response
-        response = requests.get(api_url)
-        response_data = response.json()
-
-        # Extract the temperature from the response data for the current hour
-        temperature = response_data["main"]["temp"]
-        print(
-            f"The current temperature at ({MY_LAT}, {MY_LONG}) is {temperature:.1f}°C"
-        )
-        return temperature
-
-    def update_time():
-        now = datetime.datetime.now()
-        date_time_label.config(
-            text=now.strftime("%d.%m.%Y %H:%M:%S")
-            + "\n Temperature: {:.1f}°C".format(temp_data())
-        )
-        window.after(1000, update_time)
-
-    window = tk.Tk()
-    window.geometry("1920x1000")
-    window.protocol("WM_DELETE_WINDOW", on_closing)
-
-    # get the screen width and height
-    screen_width = window.winfo_screenwidth()
-    screen_height = window.winfo_screenheight()
-
-    # calculate the x and y coordinates to center the window
-    x = (screen_width // 2) - (1920 // 2)
-    y = (screen_height // 2) - (1080 // 2)
-    window.geometry(f"+{x}+{y}")
-
-    # header frame
-    header_frame = tk.Frame(window, bg="blue", height=60)
-    header_frame.pack(fill="x")
-
-    # header date, time, temperature
-    date_time_label = tk.Label(header_frame, font=FONT)
-    date_time_label.pack(side="left", padx=20)
-
-    # header app name
-    app_title_label = tk.Label(
-        header_frame, text="PyFlora - User View", bg="yellow", font=FONT
-    )
-    app_title_label.place(relx=0.5, rely=0.5, anchor="center")
-
-    # header logout button
-    log_out_btn = tk.Button(
-        header_frame,
-        text="Log Out",
-        bg="red",
-        font=FONT,
-        command=on_closing,
-        relief="raised",
-    )
-    log_out_btn.pack(side="right", padx=20)
-
-    # sensor_chart_frame
-    sensor_chart_frame = tk.Frame(window)
-    sensor_chart_frame.pack(fill="x")
-
-    # create a sub-frame within the sensor_chart_frame to hold the sensor_monitor_app content
-    sensor_monitor_frame = tk.Frame(sensor_chart_frame)
-    sensor_monitor_frame.pack(side="left")
-
-    # sensor gui
     def sync_data():
         # LIGHT SENSOR READINGS
         num_values = 5
@@ -208,40 +127,117 @@ def user_view():
             sync_value, sync_value_grade
         )
 
-        temp_label["text"] = "Temperature: \t{:.1f}".format(temp_data())
+        temp_label["text"] = "Temperature: \t{:.1f} \t°C".format(temp_data())
 
-    sensors_frame = ttk.LabelFrame(sensor_monitor_frame, text="Sensors Data")
-    sensors_frame.grid(column=0, row=0, padx=10, pady=10)
-    # sensors_frame.rowconfigure(0, minsize=200)
-    sensors_frame.columnconfigure(0, minsize=420)
+    def on_closing():
+        if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
+            window.destroy()
 
-    sync_button = ttk.Button(sensor_monitor_frame, text="Sync", command=sync_data)
-    sync_button.grid(column=1, row=0, padx=10, pady=10)
+    def temp_data():
+        MY_LAT = 45.790152  # Your latitude
+        MY_LONG = 16.005303  # Your longitude
+        MY_API = "b8fe2d48edaec121636871ffc793be7e"
 
-    moisture_label = ttk.Label(sensors_frame, text="Moisture: N/A", justify="left")
-    moisture_label.grid(column=0, row=0, sticky="w")
+        # Construct the API request URL
+        api_url = f"https://api.openweathermap.org/data/2.5/weather?lat={MY_LAT}&lon={MY_LONG}&appid={MY_API}&units=metric"
 
-    ph_label = ttk.Label(sensors_frame, text="pH: N/A", justify="left")
-    ph_label.grid(column=0, row=1, sticky="w")
+        # Send the API request and get the response
+        response = requests.get(api_url)
+        response_data = response.json()
 
-    salinity_label = ttk.Label(sensors_frame, text="Salinity: N/A", justify="left")
-    salinity_label.grid(column=0, row=2, sticky="w")
+        # Extract the temperature from the response data for the current hour
+        temperature = response_data["main"]["temp"]
 
-    light_label = ttk.Label(sensors_frame, text="Light: N/A", justify="left")
-    light_label.grid(column=0, row=3, sticky="w")
+        return temperature
 
-    temp_label = ttk.Label(sensors_frame, text="Temperature: N/A", justify="left")
-    temp_label.grid(column=0, row=4, sticky="w")
+    def update_time():
+        now = datetime.datetime.now()
+        date_time_label.config(
+            text=now.strftime("%d.%m.%Y %H:%M:%S")
+            + "\n Temperature: {:.1f}°C".format(temp_data()),
+        )
+        window.after(1000, update_time)
+
+    window = tk.Tk()
+    window.geometry("1920x1000")
+    window.configure(bg="red")
+
+    window.protocol("WM_DELETE_WINDOW", on_closing)
+    FONT = ("Roboto Mono", 12)
+
+    # get the screen width and height
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+
+    # calculate the x and y coordinates to center the window
+    x = (screen_width // 2) - (1920 // 2)
+    y = (screen_height // 2) - (1080 // 2)
+    window.geometry(f"+{x}+{y}")
+
+    # header frame
+    header_frame = tk.LabelFrame(
+        window, height=60, labelanchor="s", borderwidth=2, relief="groove"
+    )
+    header_frame.pack(fill="x")
+
+    # header date, time, temperature
+    date_time_label = tk.Label(header_frame)
+    date_time_label.pack(side="left", padx=10)
+
+    # header app name
+    app_title_label = tk.Label(header_frame, text="PyFlora - User View", font=FONT)
+    app_title_label.place(relx=0.5, rely=0.5, anchor="center")
+
+    # header logout button
+    log_out_btn = tk.Button(
+        header_frame,
+        text="Log Out",
+        font=FONT,
+        command=on_closing,
+        relief="raised",
+    )
+    log_out_btn.pack(side="right", padx=20)
+
+    # sensor_chart_frame
+    sensor_chart_frame = tk.Frame(window)
+    sensor_chart_frame.pack(fill="x")
+
+    # sensor gui
+    sensor_monitor_frame = tk.LabelFrame(sensor_chart_frame, text="Sensors Data")
+    sensor_monitor_frame.pack(side="left", padx=10)
+    sensor_monitor_frame.columnconfigure(0, minsize=423)
+
+    sync_button = tk.Button(sensor_monitor_frame, text="Sync", command=sync_data)
+    sync_button.grid(column=0, row=5, padx=10, pady=10, sticky="ew")
+
+    moisture_label = tk.Label(
+        sensor_monitor_frame, text="Moisture: N/A", justify="left"
+    )
+    moisture_label.grid(column=0, row=0, sticky="w", padx=10)
+
+    ph_label = tk.Label(sensor_monitor_frame, text="pH: N/A", justify="left")
+    ph_label.grid(column=0, row=1, sticky="w", padx=10)
+
+    salinity_label = tk.Label(
+        sensor_monitor_frame, text="Salinity: N/A", justify="left"
+    )
+    salinity_label.grid(column=0, row=2, sticky="w", padx=10)
+
+    light_label = tk.Label(sensor_monitor_frame, text="Light: N/A", justify="left")
+    light_label.grid(column=0, row=3, sticky="w", padx=10)
+
+    temp_label = tk.Label(sensor_monitor_frame, text="Temperature: N/A", justify="left")
+    temp_label.grid(column=0, row=4, sticky="w", padx=10)
 
     # CHART FRAME
-    chart_frame = tk.Frame(sensor_chart_frame, bg="red")
+    chart_frame = tk.Frame(sensor_chart_frame)
     chart_frame.pack(fill="both", expand=True)
     chart_frame.propagate = False
     chart_frame.rowconfigure(0, minsize=300)
 
-    chart_frame1 = tk.Label(chart_frame, text="chart1", bg="blue")
-    chart_frame2 = tk.Label(chart_frame, text="chart 2", bg="orange")
-    chart_frame3 = tk.Label(chart_frame, text="chart 3", bg="yellow")
+    chart_frame1 = tk.Label(chart_frame, text="chart1")
+    chart_frame2 = tk.Label(chart_frame, text="chart 2")
+    chart_frame3 = tk.Label(chart_frame, text="chart 3")
 
     # Use grid to position the label widgets in the chart_frame and make them fill all the space
     chart_frame1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -259,8 +255,32 @@ def user_view():
     chart_frame2.config(anchor="center")
     chart_frame3.config(anchor="center")
 
+    # plant list
+    plant_pot_list_frame = tk.LabelFrame(window)
+    plant_pot_list_frame.pack(fill="both", expand=True)
+
+    plant_list_label = tk.LabelFrame(
+        plant_pot_list_frame,
+        text="PLANT LIST",
+        borderwidth=2,
+        relief="groove",
+    )
+    plant_list_label.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+    plant_pot_list_frame.columnconfigure(0, weight=1)
+
+    pot_list_label = tk.LabelFrame(
+        plant_pot_list_frame,
+        text="POT LIST",
+        borderwidth=2,
+        relief="groove",
+    )
+    pot_list_label.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
+    plant_pot_list_frame.columnconfigure(1, weight=1)
+    plant_pot_list_frame.rowconfigure(0, weight=1)
+
     update_time()  # start updating the time label
+
     window.mainloop()
 
 
-# user_view()
+user_view()
