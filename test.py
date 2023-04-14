@@ -1,17 +1,14 @@
 import tkinter as tk
 
-window = tk.Tk()
-window.geometry("1920x1000")
+def update_label_text():
+    new_label1=label.config(text="New label text")
 
-# get the screen width and height
-screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight()
-print(screen_width)
-print(screen_height)
-# calculate the x and y coordinates to center the window
-x = (screen_width // 2) - (1920 // 2)
-y = (screen_height // 2) - (1080 // 2)
+root = tk.Tk()
 
-print((screen_width // 2) - (1920 // 2))
-print((screen_height // 2) - (1080 // 2))
-window.geometry(f"+{x}+{y}")
+label = tk.Label(root, text="Original label text")
+label.pack()
+
+button = tk.Button(root, text="Update label text", command=update_label_text)
+button.pack()
+
+root.mainloop()
