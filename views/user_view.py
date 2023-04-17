@@ -1,10 +1,12 @@
 import tkinter as tk
 import random
-from tkinter import font
 from tkinter.messagebox import askokcancel
 import requests
 import datetime
 from PIL import ImageTk, Image
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 
 def user_view():
@@ -61,14 +63,11 @@ def user_view():
         sync_humidity_values_grade = label
 
         ## PH & SALINITY
-        # Define the range of pH and salinity values
         pH_range = (4.5, 8.5)
         salinity_range = (0.1, 1.0)
 
-        # Define the number of values to generate
         num_values = 5
 
-        # Generate random pH and salinity values within the specified range
         pH_values = [
             random.uniform(pH_range[0], pH_range[1]) for i in range(num_values)
         ]
@@ -112,14 +111,10 @@ def user_view():
         sync_value_ph = pH_values[sync_value_index]
         sync_value_ph_grade = pH_grades[sync_value_index]
 
-        # Code to sync sensor data from the pots
-        # Code to sync temperature data from the weather station
-
         # Update labels with new data
         moisture_label["text"] = "Moisture Sensor: \t{} \t{}".format(
             round(sync_humidity_values, 2), sync_humidity_values_grade
         )
-
         ph_label["text"] = "pH: \t\t{} \t{}".format(
             round(sync_value_ph, 2), sync_value_ph_grade
         )
@@ -142,6 +137,7 @@ def user_view():
                 "value": sync_value_salinity,
                 "grade": sync_value_salinity_grade,
             },
+            "chart_light_values_list": {"value": light_values},
         }
 
     def on_closing():
@@ -173,104 +169,179 @@ def user_view():
         )
         window.after(1000, update_time)
 
-    window = tk.Tk()
-    window.geometry("1920x1000")
-    window.configure(bg="red")
-    window.attributes("-fullscreen", True)
-
-
-    window.protocol("WM_DELETE_WINDOW", on_closing)
+    header_bg = "#66c644"
+    header_font = 9
+    log_out_btn_bg = "#679436"
+    header_font_fg = "#ffffff"
+    sensor_monitor_frame_bg = "#F7E8AF"
     FONT = ("Roboto Mono", 12)
 
+    window = tk.Tk()
+    window.geometry("1920x1000")
+    window.attributes("-fullscreen", True)
+    window.protocol("WM_DELETE_WINDOW", on_closing)
+
     # get the screen width and height
-    screen_width = window.winfo_screenwidth()
-    screen_height = window.winfo_screenheight()
+    # screen_width = window.winfo_screenwidth()
+    # screen_height = window.winfo_screenheight()
+    # x = (screen_width // 2) - (1920 // 2)
+    # y = (screen_height // 2) - (1080 // 2)
+    # window.geometry(f"+{x}+{y}")
 
-    # calculate the x and y coordinates to center the window
-    x = (screen_width // 2) - (1920 // 2)
-    y = (screen_height // 2) - (1080 // 2)
-    window.geometry(f"+{x}+{y}")
-
-    # header frame
+    # ####################  header_frame  ####################
     header_frame = tk.LabelFrame(
-        window, height=60, labelanchor="s", borderwidth=2, relief="groove"
+        window,
+        height=60,
+        labelanchor="s",
+        borderwidth=2,
+        relief="groove",
+        bg=header_bg,
     )
-    header_frame.pack(fill="x")
 
     # header date, time, temperature
-    date_time_label = tk.Label(header_frame)
-    date_time_label.pack(side="left", padx=20, pady=10)
+    date_time_label = tk.Label(
+        header_frame,
+        bg=header_bg,
+        font=header_font,
+        fg=header_font_fg,
+    )
     # header app name
     app_title_label = tk.Label(
-        header_frame, text="PyFlora - User View", font=FONT, padx=20, pady=10
+        header_frame,
+        text="PyFlora - User View",
+        font=header_font,
+        padx=20,
+        pady=10,
+        bg=header_bg,
+        fg=header_font_fg,
     )
-    app_title_label.place(relx=0.5, rely=0.5, anchor="center")
-
     # header logout button
     log_out_btn = tk.Button(
         header_frame,
         text="Log Out",
-        font=FONT,
+        font=header_font,
         command=on_closing,
         relief="raised",
+        bg=log_out_btn_bg,
+        fg=header_font_fg,
     )
+    header_frame.pack(fill="x")
+    date_time_label.pack(side="left", padx=20, pady=10)
+    app_title_label.place(relx=0.5, rely=0.5, anchor="center")
     log_out_btn.pack(side="right", padx=20, pady=10)
 
-    # sensor_chart_frame
-    sensor_chart_frame = tk.Frame(window)
-    sensor_chart_frame.pack(fill="x")
+    # ####################  sensor&chart_frame  ####################
+    sensor_chart_frame = tk.Frame(window, bg=sensor_monitor_frame_bg)
 
-    # sensor gui
-    sensor_monitor_frame = tk.LabelFrame(sensor_chart_frame, text="Sensors Data")
+    # sensor_monitor_frame gui
+    sensor_monitor_frame = tk.LabelFrame(
+        sensor_chart_frame, text="Sensors Data", bg=sensor_monitor_frame_bg
+    )
+    sync_button = tk.Button(
+        sensor_monitor_frame,
+        text="Sync",
+        command=sync_data,
+        bg=sensor_monitor_frame_bg,
+        activebackground=sensor_monitor_frame_bg,
+    )
+    moisture_label = tk.Label(
+        sensor_monitor_frame,
+        text="Moisture: N/A",
+        justify="left",
+        bg=sensor_monitor_frame_bg,
+    )
+    ph_label = tk.Label(
+        sensor_monitor_frame, text="pH: N/A", justify="left", bg=sensor_monitor_frame_bg
+    )
+    salinity_label = tk.Label(
+        sensor_monitor_frame,
+        text="Salinity: N/A",
+        justify="left",
+        bg=sensor_monitor_frame_bg,
+    )
+    light_label = tk.Label(
+        sensor_monitor_frame,
+        text="Light: N/A",
+        justify="left",
+        bg=sensor_monitor_frame_bg,
+    )
+    temp_label = tk.Label(
+        sensor_monitor_frame,
+        text="Temperature: N/A",
+        justify="left",
+        bg=sensor_monitor_frame_bg,
+    )
+    # chart frame
+    chart_frame = tk.Frame(sensor_chart_frame, bg=sensor_monitor_frame_bg)
+
+    # ####################charts####################
+    chart_light_values = sync_data()["chart_light_values_list"]["value"]
+    fig = plt.Figure(
+        figsize=(chart_frame.winfo_width() / 100, chart_frame.winfo_height() / 100),
+        dpi=100,
+        tight_layout=True,
+    )
+    ax = fig.add_subplot(111)
+    ax.bar(range(len(chart_light_values)), chart_light_values)
+    ax.set_ylabel("Intensity")
+    ax.set_title("Light Values")
+    ax.set_xticks(range(len(chart_light_values)))
+    ax.set_xticklabels(["Mon", "Tue", "Wen", "Thu", "Fri"])
+    canvas_light_chart = FigureCanvasTkAgg(fig, master=chart_frame)
+    canvas_light_chart.draw()
+
+    # chart 2
+    humidity_values = sync_data()["chart_light_values_list"]["value"]
+    fig = Figure(
+        (chart_frame.winfo_width() / 100, chart_frame.winfo_height() / 100),
+        dpi=100,
+        tight_layout=True,
+    )
+    ax = fig.add_subplot(111)
+    ax.plot(humidity_values)
+    ax.set_title("Humidity Line Chart")
+    ax.set_ylabel("Humidity")
+    ax.set_xticks(range(len(humidity_values)))
+    ax.set_xticklabels(["Mon", "Tue", "Wen", "Thu", "Fri"])
+    canvas_humidity_chart = FigureCanvasTkAgg(fig, master=chart_frame)
+    canvas_humidity_chart.draw()
+
+    user_info_label = tk.Label(chart_frame, text="User Info")
+
+    # ####################sensor_chart_frame positioning####################
+    sensor_chart_frame.pack(fill="x")
+    sensor_chart_frame.columnconfigure(0, weight=1, uniform="col")
+    sensor_chart_frame.columnconfigure(1, weight=1, uniform="col")
+    sensor_chart_frame.columnconfigure(2, weight=1, uniform="col")
+    sensor_chart_frame.columnconfigure(3, weight=1, uniform="col")
+    sensor_chart_frame.rowconfigure(0, weight=1, minsize=200, uniform="row")
+    # sensor_monitor_frame positioning
     sensor_monitor_frame.pack(side="left", padx=10)
     sensor_monitor_frame.columnconfigure(0, weight=1, minsize=410)
-
-    sync_button = tk.Button(sensor_monitor_frame, text="Sync", command=sync_data)
     sync_button.grid(column=0, row=5, padx=10, pady=10, sticky="ew")
-
-    moisture_label = tk.Label(
-        sensor_monitor_frame, text="Moisture: N/A", justify="left"
-    )
     moisture_label.grid(column=0, row=0, sticky="w", padx=10)
-
-    ph_label = tk.Label(sensor_monitor_frame, text="pH: N/A", justify="left")
     ph_label.grid(column=0, row=1, sticky="w", padx=10)
-
-    salinity_label = tk.Label(
-        sensor_monitor_frame, text="Salinity: N/A", justify="left"
-    )
     salinity_label.grid(column=0, row=2, sticky="w", padx=10)
-
-    light_label = tk.Label(sensor_monitor_frame, text="Light: N/A", justify="left")
     light_label.grid(column=0, row=3, sticky="w", padx=10)
-
-    temp_label = tk.Label(sensor_monitor_frame, text="Temperature: N/A", justify="left")
     temp_label.grid(column=0, row=4, sticky="w", padx=10)
-
-    # CHART FRAME
-    chart_frame = tk.Frame(sensor_chart_frame)
+    # chart frame positioning
     chart_frame.pack(fill="both", expand=True)
     chart_frame.propagate = False
-    chart_frame.rowconfigure(0, minsize=300)
-    # Configure the grid to fill the available space
-    chart_frame.columnconfigure(0, weight=1)
-    chart_frame.columnconfigure(1, weight=1)
-    chart_frame.columnconfigure(2, weight=1)
+    chart_frame.rowconfigure(0, minsize=300, uniform="row")
+    chart_frame.columnconfigure(0, weight=1, uniform="col")
+    chart_frame.columnconfigure(1, weight=1, uniform="col")
+    chart_frame.columnconfigure(2, weight=1, uniform="col")
     chart_frame.rowconfigure(0, weight=1)
+    canvas_light_chart.get_tk_widget().grid(
+        row=0, column=0, padx=10, pady=10, sticky="nsew"
+    )
+    canvas_humidity_chart.get_tk_widget().grid(
+        row=0, column=1, padx=10, pady=10, sticky="nsew"
+    )
+    user_info_label.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+    user_info_label.config(anchor="center")
 
-    chart_label1 = tk.Label(chart_frame, text="chart1")
-    chart_label1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-    chart_label1.config(anchor="center")
-
-    chart_label2 = tk.Label(chart_frame, text="chart 2")
-    chart_label2.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-    chart_label2.config(anchor="center")
-
-    chart_label3 = tk.Label(chart_frame, text="chart 3")
-    chart_label3.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
-    chart_label3.config(anchor="center")
-
-    # plant_pot_list_frame
+    # ####################plant_pot_list_frame####################
     plant_pot_list_frame = tk.LabelFrame(window, padx=10, pady=10)
     plant_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
@@ -283,33 +354,30 @@ def user_view():
         width=948,
         height=620,
     )
+    # plant_list_label_frame widgets
     add_new_plant_btn = tk.Button(
-        plant_list_label_frame, text="Add New Plant", padx=5, pady=5
+        plant_list_label_frame, text="Add New Plant", padx=5, pady=5, width=20
     )
-
-    # plant_list plant frame
     plant_label = tk.Label(plant_list_label_frame, borderwidth=2, relief="groove")
     plant_name = tk.Label(plant_label, text="Name: \t\tRose", justify="left")
     plant_type = tk.Label(plant_label, text="Type: \t\tFlower", justify="left")
     plant_watering = tk.Label(
         plant_label, text="Watering: \tTwice a week", justify="left"
     )
-    plant_desc = tk.Label(plant_label, text="Description: \tA", justify="left")
+    plant_desc = tk.Label(
+        plant_label,
+        text="Description: \tA popular flowering plant known for its sweet fragrance and variety of colors.",
+        justify="left",
+        bg="red",
+    )
+
     image = Image.open("plant_img/rose.png")
     photo = ImageTk.PhotoImage(image.resize((150, 170)))
     plant_img = tk.Label(plant_label, image=photo, height=170, width=150)
     del_my_plant_btn = tk.Button(
         plant_label, text="Delete My Plant", padx=5, pady=5, width=20
     )
-    # positioning
-    plant_name.grid(row=1, column=0, sticky="w")
-    plant_type.grid(row=2, column=0, sticky="w")
-    plant_watering.grid(row=3, column=0, sticky="w")
-    plant_desc.grid(row=4, column=0, sticky="w")
-    plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
-    del_my_plant_btn.grid(row=4, column=1)
-
-    # pot list
+    # pot_list_label_frame widgets
     pot_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
         text="POT LIST",
@@ -321,26 +389,31 @@ def user_view():
         width=50,
     )
     add_plant_to_pot = tk.Button(
-        pot_list_label_frame, text="Add Plant to Pot", padx=5, pady=5
+        pot_list_label_frame, text="Add Plant to Pot", padx=5, pady=5, width=20
     )
     planted_pot_label = tk.Label(
         pot_list_label_frame, borderwidth=2, relief="groove", width=50
     )
-    del_planted_pot_btn = tk.Button(
-        planted_pot_label, text="Delete from Pot", padx=5, pady=5, width=20
-    )
-
     planted_image = Image.open("planted_pots_img/rose_planted.png")
     planted_photo = ImageTk.PhotoImage(planted_image.resize((150, 170)))
     planted_img = tk.Label(
         planted_pot_label, image=planted_photo, height=170, width=150
     )
-
+    del_planted_pot_btn = tk.Button(
+        planted_pot_label, text="Delete from Pot", padx=5, pady=5, width=20
+    )
     light_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
     humidity_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
     ph_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
     salintiy_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
-
+    plant_name_pot = tk.Label(planted_pot_label, text="Name: \t\tRose", justify="left")
+    plant_type_pot = tk.Label(
+        planted_pot_label, text="Type: \t\tFlower", justify="left"
+    )
+    plant_watering_pot = tk.Label(
+        planted_pot_label, text="Watering: \tTwice a week", justify="left"
+    )
+    # planted_pot_label sensor data
     sensor_data = sync_data()
     light_sens["text"] = "Light Sensor: \t{}".format(
         round(sensor_data["light"]["value"], 2)
@@ -353,43 +426,49 @@ def user_view():
         round(sensor_data["salinity"]["value"], 2)
     )
 
-    # planted_pot_label positioning
-    planted_img.grid(row=0, column=0, sticky="w", rowspan=3)
-    light_sens.grid(row=0, column=1, sticky="w")
-    humidity_sens.grid(row=1, column=1, sticky="w")
-    ph_sens.grid(row=2, column=1, sticky="w")
-    salintiy_sens.grid(row=3, column=1, sticky="w")
-
-    planted_pot_label.columnconfigure(0, weight=1, uniform="col")
-    planted_pot_label.columnconfigure(1, weight=1, uniform="col")
-    planted_pot_label.columnconfigure(2, weight=1, uniform="col")
-
-    planted_img.columnconfigure(0, weight=1, uniform="col")
-    light_sens.columnconfigure(1, weight=1, uniform="col")
-    humidity_sens.columnconfigure(2, weight=1, uniform="col")
-    salintiy_sens.columnconfigure(3, weight=1, uniform="col")
-
-    # positionong
+    # ####################plant_pot_list_frame####################
     plant_pot_list_frame.pack(fill="both", expand=True)
     plant_pot_list_frame.columnconfigure(0, weight=1, uniform="col")
     plant_pot_list_frame.columnconfigure(1, weight=1, uniform="col")
     plant_pot_list_frame.rowconfigure(0, weight=1)
-
-    add_new_plant_btn.grid(row=0, column=0, sticky="w")
+    # plant_list_label_frame
     plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
     plant_list_label_frame.propagate(False)
     plant_list_label_frame.columnconfigure(0, weight=1)
     plant_label.grid(row=1, column=0, pady=10, sticky="nsew")
     plant_label.columnconfigure(0, weight=1)
+    add_new_plant_btn.grid(row=0, column=0, sticky="w")
+    plant_name.grid(row=1, column=0, sticky="w")
+    plant_type.grid(row=2, column=0, sticky="w")
+    plant_watering.grid(row=3, column=0, sticky="w")
+    plant_desc.grid(row=4, column=0, sticky="ew")
+    plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
+    del_my_plant_btn.grid(row=4, column=1)
 
+    # pot_list_label_frame
     pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
     pot_list_label_frame.columnconfigure(1, weight=1)
     add_plant_to_pot.grid(row=0, column=0)
     planted_pot_label.grid(row=1, column=0, pady=10, columnspan=2, sticky="nsew")
+    planted_pot_label.columnconfigure(0, weight=1, uniform="col")
+    planted_pot_label.columnconfigure(1, weight=1, uniform="col")
+    planted_pot_label.columnconfigure(2, weight=1, uniform="col")
+    planted_img.grid(row=0, column=0, sticky="w", rowspan=3)
+    planted_img.columnconfigure(0, weight=1, uniform="col")
     del_planted_pot_btn.grid(row=3, column=0, sticky="w")
-    planted_pot_label.columnconfigure(0, weight=1)
+    light_sens.grid(row=0, column=1, sticky="w")
+    humidity_sens.grid(row=1, column=1, sticky="w")
+    ph_sens.grid(row=2, column=1, sticky="w")
+    salintiy_sens.grid(row=3, column=1, sticky="w")
+    light_sens.columnconfigure(1, weight=1, uniform="col")
+    humidity_sens.columnconfigure(2, weight=1, uniform="col")
+    salintiy_sens.columnconfigure(3, weight=1, uniform="col")
+    plant_name_pot.grid(row=0, column=2, sticky="w")
+    plant_type_pot.grid(row=1, column=2, sticky="w")
+    plant_watering_pot.grid(row=2, column=2, sticky="w")
 
     pot_list_label_frame.update()
+
     print(plant_list_label_frame.winfo_width(), plant_list_label_frame.winfo_height())
     print(pot_list_label_frame.winfo_width(), pot_list_label_frame.winfo_height())
 
