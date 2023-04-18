@@ -177,7 +177,8 @@ def user_view():
         collection_name_plants = "plants"
         collection_name_pots = "pots"
         collection_name_users = "users"
-
+        global current_row
+        current_row = 1
         my_plant_service = PlantService(
             connection_uri, database_name, collection_name_plants
         )
@@ -185,6 +186,7 @@ def user_view():
         window.geometry("1700x600")
 
         def add_plant():
+            global current_row
             item = plants_table.selection()[0]
             values = plants_table.item(item, "values")
             name = values[0]
@@ -211,20 +213,37 @@ def user_view():
             plant_type["text"] = "Type: \t\t{}".format(type)
             plant_watering["text"] = "Watering: \t{}".format(watering)
             plant_desc["text"] = "Description: \t{}".format(description)
-            plant_label.grid(row=1, column=0, pady=10, sticky="nsew")
+
+            plant_label.grid(row=current_row, column=0, pady=10, sticky="nsew")
             plant_label.columnconfigure(0, weight=1)
+
             plant_name.grid(row=1, column=0, sticky="w")
             plant_type.grid(row=2, column=0, sticky="w")
             plant_watering.grid(row=3, column=0, sticky="w")
             plant_desc.grid(row=4, column=0, sticky="ew")
             plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
             del_my_plant_btn.grid(row=4, column=1)
+            current_row += 1
+            # plant_label.grid(row=+1, column=0, pady=10, sticky="nsew")
+            # plant_label.pack(pady=20)
+
             return None
 
         plants = my_plant_service.find_all_plants()
         plants_table_frame = tk.Frame(window)
         plants_table_frame.pack(side="bottom", fill="both", expand=True)
+        add_plant_button = tk.Button(
+            plants_table_frame, text="Add Plant", command=add_plant, width=15
+        )
+        add_plant_button.pack(side="top", padx=10, pady=10)
 
+        def close_add_plant():
+            window.destroy()
+
+        close_button = tk.Button(
+            plants_table_frame, text="Close", command=close_add_plant, width=15
+        )
+        close_button.pack(side="top", anchor="ne", padx=10, pady=10)
         plants_table = ttk.Treeview(
             plants_table_frame,
             columns=("name", "type", "watering", "description"),
@@ -252,14 +271,6 @@ def user_view():
                 ),
             )
 
-        add_plant_button = tk.Button(
-            plants_table_frame, text="Add Plant", command=add_plant, width=15
-        )
-        add_plant_button.pack(padx=10, pady=10)
-        # close_button = tk.Button(
-        #    window, text="Clsoe", command=window.destroy(), width=15
-        # )
-        # close_button.pack(padx=10, pady=10)
         window.mainloop()
 
     header_bg = "#66c644"
@@ -271,7 +282,7 @@ def user_view():
 
     window = tk.Tk()
     window.geometry("1920x1000")
-    # window.attributes("-fullscreen", True)
+    window.attributes("-fullscreen", True)
     window.protocol("WM_DELETE_WINDOW", on_closing)
 
     # get the screen width and height
