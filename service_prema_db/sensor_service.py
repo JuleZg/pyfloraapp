@@ -1,4 +1,4 @@
-    def sync_data():
+def sync_data():
             # LIGHT SENSOR READINGS
             num_values = 5
             light_values = [random.randint(0, 100) for i in range(num_values)]
@@ -121,11 +121,11 @@
 
             temp_label["text"] = "Temperature: \t{:.1f}".format(temp_data())
 
-    def on_closing():
+def on_closing():
         if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
             window.destroy()
 
-    def temp_data():
+def temp_data():
         MY_LAT = 45.790152  # Your latitude
         MY_LONG = 16.005303  # Your longitude
         MY_API = "b8fe2d48edaec121636871ffc793be7e"
@@ -142,7 +142,7 @@
 
         return temperature
 
-    def update_time():
+def update_time():
         now = datetime.datetime.now()
         date_time_label.config(
             text=now.strftime("%d.%m.%Y %H:%M:%S")

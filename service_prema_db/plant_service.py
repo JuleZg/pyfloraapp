@@ -23,7 +23,7 @@ class PlantService:
     def find_all_plants(self):
         try:
             plants = self.collection.find()
-            print("\n".join([str(plant) for plant in plants]))
+            #print("\n".join([str(plant) for plant in plants]))
             return [plant for plant in plants]
         except PyMongoError as e:
             print(f"An error occurred while getting all plants: {e}")

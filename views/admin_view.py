@@ -93,6 +93,7 @@ def admin_view(my_users_service):
 
     window = tk.Tk()
     window.title("Admin View")
+    window.attributes("-fullscreen", True)
     # background
     img = Image.open("plant_img/admin_view_bg2.png")
     # bg_img = ImageTk.PhotoImage(img)

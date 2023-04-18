@@ -1,30 +1,66 @@
 import tkinter as tk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
+from tkinter import ttk
+from service_prema_db.plant_service import PlantService
 
-# create the Tkinter GUI window
-root = tk.Tk()
-root.title("Humidity Line Chart")
 
-# create a sample data set of humidity values
-humidity_data = [50, 55, 60, 65, 70, 75, 80]
+connection_uri = "mongodb://localhost:27017/"
+database_name = "pyflora"
+collection_name_plants = "plants"
+collection_name_pots = "pots"
+collection_name_users = "users"
 
-# create a Matplotlib figure and axis
-fig = Figure(figsize=(6, 4), dpi=100)
-ax = fig.add_subplot(111)
+my_plant_service = PlantService(connection_uri, database_name, collection_name_plants)
+window = tk.Tk()
+window.geometry("1700x600")
 
-# plot the humidity data as a line chart
-ax.plot(humidity_data)
 
-# set the chart title and axis labels
-ax.set_title("Humidity Line Chart")
-ax.set_xlabel("Time")
-ax.set_ylabel("Humidity")
+def print_selection():
+    item = plants_table.selection()[0]
+    values = plants_table.item(item, "values")
+    name = values[0]
+    plant_type = values[1]
+    watering = values[2]
+    description = values[3]
+    
+    print("Name:", name)
+    print("Type:", plant_type)
+    print("Watering:", watering)
+    print("Description:", description)
 
-# create a Tkinter canvas and embed the Matplotlib figure
-canvas = FigureCanvasTkAgg(fig, master=root)
-canvas.draw()
-canvas.get_tk_widget().pack()
+    return name, plant, watering, description
 
-# run the Tkinter event loop
-root.mainloop()
+
+plants = my_plant_service.find_all_plants()
+plants_table_frame = tk.Frame(window)
+plants_table_frame.pack(side="bottom", fill="both", expand=True)
+
+plants_table = ttk.Treeview(
+    plants_table_frame,
+    columns=("name", "type", "watering", "description"),
+    show="headings",
+)
+plants_table.heading("name", text="Name")
+plants_table.column("name", anchor="w")
+plants_table.heading("type", text="Type")
+plants_table.column("type", anchor="w")
+plants_table.heading("watering", text="Watering")
+plants_table.column("watering", anchor="w")
+plants_table.heading("description", text="Description")
+plants_table.column("description", anchor="w", minwidth=0, width=1000)
+plants_table.pack(side="top", fill="y", expand=True)
+
+for plant in plants:
+    plants_table.insert(
+        "",
+        "end",
+        values=(
+            plant["name"],
+            plant["type"],
+            plant["watering"],
+            plant["desc"],
+        ),
+    )
+
+button = tk.Button(window, text="Add Plant", command=print_selection, width=15)
+button.pack(padx=10, pady=10)
+window.mainloop()

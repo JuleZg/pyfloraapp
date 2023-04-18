@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import random
 from tkinter.messagebox import askokcancel
 import requests
@@ -7,6 +8,7 @@ from PIL import ImageTk, Image
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from service_prema_db.plant_service import PlantService
 
 
 def user_view():
@@ -169,6 +171,97 @@ def user_view():
         )
         window.after(1000, update_time)
 
+    def add_new_plant():
+        connection_uri = "mongodb://localhost:27017/"
+        database_name = "pyflora"
+        collection_name_plants = "plants"
+        collection_name_pots = "pots"
+        collection_name_users = "users"
+
+        my_plant_service = PlantService(
+            connection_uri, database_name, collection_name_plants
+        )
+        window = tk.Tk()
+        window.geometry("1700x600")
+
+        def add_plant():
+            item = plants_table.selection()[0]
+            values = plants_table.item(item, "values")
+            name = values[0]
+            type = values[1]
+            watering = values[2]
+            description = values[3]
+
+            plant_label = tk.Label(
+                plant_list_label_frame, borderwidth=2, relief="groove"
+            )
+            plant_name = tk.Label(plant_label, text="Name: \t\tn/a", justify="left")
+            plant_type = tk.Label(plant_label, text="Type: \t\tn/a", justify="left")
+            plant_watering = tk.Label(
+                plant_label, text="Watering: \tn/a", justify="left"
+            )
+            plant_desc = tk.Label(plant_label, text="Description: \tn/a", anchor="w")
+            image = Image.open("plant_img/rose.png")
+            photo = ImageTk.PhotoImage(image.resize((150, 170)))
+            plant_img = tk.Label(plant_label, image=photo, height=170, width=150)
+            del_my_plant_btn = tk.Button(
+                plant_label, text="Delete My Plant", padx=5, pady=5, width=20
+            )
+            plant_name["text"] = "Name: \t\t{}".format(name)
+            plant_type["text"] = "Type: \t\t{}".format(type)
+            plant_watering["text"] = "Watering: \t{}".format(watering)
+            plant_desc["text"] = "Description: \t{}".format(description)
+            plant_label.grid(row=1, column=0, pady=10, sticky="nsew")
+            plant_label.columnconfigure(0, weight=1)
+            plant_name.grid(row=1, column=0, sticky="w")
+            plant_type.grid(row=2, column=0, sticky="w")
+            plant_watering.grid(row=3, column=0, sticky="w")
+            plant_desc.grid(row=4, column=0, sticky="ew")
+            plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
+            del_my_plant_btn.grid(row=4, column=1)
+            return None
+
+        plants = my_plant_service.find_all_plants()
+        plants_table_frame = tk.Frame(window)
+        plants_table_frame.pack(side="bottom", fill="both", expand=True)
+
+        plants_table = ttk.Treeview(
+            plants_table_frame,
+            columns=("name", "type", "watering", "description"),
+            show="headings",
+        )
+        plants_table.heading("name", text="Name")
+        plants_table.column("name", anchor="w")
+        plants_table.heading("type", text="Type")
+        plants_table.column("type", anchor="w")
+        plants_table.heading("watering", text="Watering")
+        plants_table.column("watering", anchor="w")
+        plants_table.heading("description", text="Description")
+        plants_table.column("description", anchor="w", minwidth=0, width=1000)
+        plants_table.pack(side="top", fill="y", expand=True)
+
+        for plant in plants:
+            plants_table.insert(
+                "",
+                "end",
+                values=(
+                    plant["name"],
+                    plant["type"],
+                    plant["watering"],
+                    plant["desc"],
+                ),
+            )
+
+        add_plant_button = tk.Button(
+            plants_table_frame, text="Add Plant", command=add_plant, width=15
+        )
+        add_plant_button.pack(padx=10, pady=10)
+        # close_button = tk.Button(
+        #    window, text="Clsoe", command=window.destroy(), width=15
+        # )
+        # close_button.pack(padx=10, pady=10)
+        window.mainloop()
+
     header_bg = "#66c644"
     header_font = 9
     log_out_btn_bg = "#679436"
@@ -178,7 +271,7 @@ def user_view():
 
     window = tk.Tk()
     window.geometry("1920x1000")
-    window.attributes("-fullscreen", True)
+    # window.attributes("-fullscreen", True)
     window.protocol("WM_DELETE_WINDOW", on_closing)
 
     # get the screen width and height
@@ -187,6 +280,7 @@ def user_view():
     # x = (screen_width // 2) - (1920 // 2)
     # y = (screen_height // 2) - (1080 // 2)
     # window.geometry(f"+{x}+{y}")
+    # ####################  header_frame  ####################
 
     # ####################  header_frame  ####################
     header_frame = tk.LabelFrame(
@@ -275,6 +369,7 @@ def user_view():
     chart_frame = tk.Frame(sensor_chart_frame, bg=sensor_monitor_frame_bg)
 
     # ####################charts####################
+    # chart 1
     chart_light_values = sync_data()["chart_light_values_list"]["value"]
     fig = plt.Figure(
         figsize=(chart_frame.winfo_width() / 100, chart_frame.winfo_height() / 100),
@@ -287,6 +382,8 @@ def user_view():
     ax.set_title("Light Values")
     ax.set_xticks(range(len(chart_light_values)))
     ax.set_xticklabels(["Mon", "Tue", "Wen", "Thu", "Fri"])
+    ax.set_fc(sensor_monitor_frame_bg)
+
     canvas_light_chart = FigureCanvasTkAgg(fig, master=chart_frame)
     canvas_light_chart.draw()
 
@@ -295,7 +392,6 @@ def user_view():
     fig = Figure(
         (chart_frame.winfo_width() / 100, chart_frame.winfo_height() / 100),
         dpi=100,
-        tight_layout=True,
     )
     ax = fig.add_subplot(111)
     ax.plot(humidity_values)
@@ -303,6 +399,7 @@ def user_view():
     ax.set_ylabel("Humidity")
     ax.set_xticks(range(len(humidity_values)))
     ax.set_xticklabels(["Mon", "Tue", "Wen", "Thu", "Fri"])
+    ax.set_fc(sensor_monitor_frame_bg)
     canvas_humidity_chart = FigureCanvasTkAgg(fig, master=chart_frame)
     canvas_humidity_chart.draw()
 
@@ -354,29 +451,43 @@ def user_view():
         width=948,
         height=620,
     )
+
     # plant_list_label_frame widgets
     add_new_plant_btn = tk.Button(
-        plant_list_label_frame, text="Add New Plant", padx=5, pady=5, width=20
+        plant_list_label_frame,
+        text="Add New Plant",
+        padx=5,
+        pady=5,
+        width=20,
+        command=add_new_plant,
     )
-    plant_label = tk.Label(plant_list_label_frame, borderwidth=2, relief="groove")
-    plant_name = tk.Label(plant_label, text="Name: \t\tRose", justify="left")
-    plant_type = tk.Label(plant_label, text="Type: \t\tFlower", justify="left")
-    plant_watering = tk.Label(
-        plant_label, text="Watering: \tTwice a week", justify="left"
-    )
-    plant_desc = tk.Label(
-        plant_label,
-        text="Description: \tA popular flowering plant known for its sweet fragrance and variety of colors.",
-        justify="left",
-        bg="red",
-    )
+    #####plant_label = tk.Label(plant_list_label_frame, borderwidth=2, relief="groove")
+    #####plant_name = tk.Label(plant_label, text="Name: \t\tn/a", justify="left")
+    #####plant_type = tk.Label(plant_label, text="Type: \t\tn/a", justify="left")
+    #####plant_watering = tk.Label(plant_label, text="Watering: \tn/a", justify="left")
+    #####plant_desc = tk.Label(plant_label, text="Description: \tn/a", anchor="w")
+    #####
+    #####image = Image.open("plant_img/rose.png")
+    #####photo = ImageTk.PhotoImage(image.resize((150, 170)))
+    #####plant_img = tk.Label(plant_label, image=photo, height=170, width=150)
+    #####del_my_plant_btn = tk.Button(
+    #####    plant_label, text="Delete My Plant", padx=5, pady=5, width=20
+    #####)
+    #####plant_label.grid(row=1, column=0, pady=10, sticky="nsew")
+    #####plant_label.columnconfigure(0, weight=1)
+    #####plant_name.grid(row=1, column=0, sticky="w")
+    #####plant_type.grid(row=2, column=0, sticky="w")
+    #####plant_watering.grid(row=3, column=0, sticky="w")
+    #####plant_desc.grid(row=4, column=0, sticky="ew")
+    #####plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
+    #####del_my_plant_btn.grid(row=4, column=1)
 
-    image = Image.open("plant_img/rose.png")
-    photo = ImageTk.PhotoImage(image.resize((150, 170)))
-    plant_img = tk.Label(plant_label, image=photo, height=170, width=150)
-    del_my_plant_btn = tk.Button(
-        plant_label, text="Delete My Plant", padx=5, pady=5, width=20
-    )
+    # plant_list_label_frame
+    plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
+    plant_list_label_frame.propagate(False)
+    plant_list_label_frame.columnconfigure(0, weight=1)
+    add_new_plant_btn.grid(row=0, column=0, sticky="w")
+
     # pot_list_label_frame widgets
     pot_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
@@ -431,19 +542,6 @@ def user_view():
     plant_pot_list_frame.columnconfigure(0, weight=1, uniform="col")
     plant_pot_list_frame.columnconfigure(1, weight=1, uniform="col")
     plant_pot_list_frame.rowconfigure(0, weight=1)
-    # plant_list_label_frame
-    plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
-    plant_list_label_frame.propagate(False)
-    plant_list_label_frame.columnconfigure(0, weight=1)
-    plant_label.grid(row=1, column=0, pady=10, sticky="nsew")
-    plant_label.columnconfigure(0, weight=1)
-    add_new_plant_btn.grid(row=0, column=0, sticky="w")
-    plant_name.grid(row=1, column=0, sticky="w")
-    plant_type.grid(row=2, column=0, sticky="w")
-    plant_watering.grid(row=3, column=0, sticky="w")
-    plant_desc.grid(row=4, column=0, sticky="ew")
-    plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
-    del_my_plant_btn.grid(row=4, column=1)
 
     # pot_list_label_frame
     pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
@@ -477,4 +575,4 @@ def user_view():
     window.mainloop()
 
 
-user_view()
+# user_view()
