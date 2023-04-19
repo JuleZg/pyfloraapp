@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import RIGHT, ttk
 import random
 from tkinter.messagebox import askokcancel
 import requests
@@ -194,9 +194,7 @@ def user_view():
             watering = values[2]
             description = values[3]
 
-            plant_label = tk.Label(
-                plant_list_label_frame, borderwidth=2, relief="groove"
-            )
+            plant_label = tk.Label(plant_list_frame, borderwidth=2, relief="groove")
             plant_name = tk.Label(plant_label, text="Name: \t\tn/a", justify="left")
             plant_type = tk.Label(plant_label, text="Type: \t\tn/a", justify="left")
             plant_watering = tk.Label(
@@ -216,18 +214,27 @@ def user_view():
 
             plant_label.grid(row=current_row, column=0, pady=10, sticky="nsew")
             plant_label.columnconfigure(0, weight=1)
-
+            plant_list_frame.update_idletasks()
+            canvas_plant_list.configure(scrollregion=canvas_plant_list.bbox("all"))
+            canvas_plant_list.bind_all(
+                "<MouseWheel>",
+                lambda event: canvas_plant_list.yview_scroll(
+                    -1 * (event.delta // 120), "units"
+                ),
+            )
+            current_row += 1
             plant_name.grid(row=1, column=0, sticky="w")
             plant_type.grid(row=2, column=0, sticky="w")
             plant_watering.grid(row=3, column=0, sticky="w")
             plant_desc.grid(row=4, column=0, sticky="ew")
             plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
             del_my_plant_btn.grid(row=4, column=1)
-            current_row += 1
-            # plant_label.grid(row=+1, column=0, pady=10, sticky="nsew")
-            # plant_label.pack(pady=20)
 
             return None
+
+        ######################################################################################
+        ######################################################################################
+        ######################################################################################
 
         plants = my_plant_service.find_all_plants()
         plants_table_frame = tk.Frame(window)
@@ -461,9 +468,11 @@ def user_view():
         pady=5,
         width=948,
         height=620,
+        bg="yellow",
     )
 
     # plant_list_label_frame widgets
+
     add_new_plant_btn = tk.Button(
         plant_list_label_frame,
         text="Add New Plant",
@@ -472,33 +481,50 @@ def user_view():
         width=20,
         command=add_new_plant,
     )
-    #####plant_label = tk.Label(plant_list_label_frame, borderwidth=2, relief="groove")
-    #####plant_name = tk.Label(plant_label, text="Name: \t\tn/a", justify="left")
-    #####plant_type = tk.Label(plant_label, text="Type: \t\tn/a", justify="left")
-    #####plant_watering = tk.Label(plant_label, text="Watering: \tn/a", justify="left")
-    #####plant_desc = tk.Label(plant_label, text="Description: \tn/a", anchor="w")
-    #####
-    #####image = Image.open("plant_img/rose.png")
-    #####photo = ImageTk.PhotoImage(image.resize((150, 170)))
-    #####plant_img = tk.Label(plant_label, image=photo, height=170, width=150)
-    #####del_my_plant_btn = tk.Button(
-    #####    plant_label, text="Delete My Plant", padx=5, pady=5, width=20
-    #####)
-    #####plant_label.grid(row=1, column=0, pady=10, sticky="nsew")
-    #####plant_label.columnconfigure(0, weight=1)
-    #####plant_name.grid(row=1, column=0, sticky="w")
-    #####plant_type.grid(row=2, column=0, sticky="w")
-    #####plant_watering.grid(row=3, column=0, sticky="w")
-    #####plant_desc.grid(row=4, column=0, sticky="ew")
-    #####plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
-    #####del_my_plant_btn.grid(row=4, column=1)
+    canvas_plant_list = tk.Canvas(
+        plant_list_label_frame,
+        bg="red",
+        width=948,
+        height=400,
+    )
+    canvas_plant_list.grid(row=1, column=0, sticky="nsew")
+
+    my_scrollbar = tk.Scrollbar(
+        plant_list_label_frame,
+        orient="vertical",
+        command=canvas_plant_list.yview,
+    )
+    my_scrollbar.grid(row=1, column=1, sticky="ns")
+    canvas_plant_list.configure(yscrollcommand=my_scrollbar.set)
+    # Set the scroll region to encompass all items on the canvas
+    canvas_plant_list.configure(scrollregion=canvas_plant_list.bbox("all"))
+
+    # Add mouse wheel scroll functionality to the canvas
+    canvas_plant_list.bind(
+        "<MouseWheel>",
+        lambda event: canvas_plant_list.yview_scroll(
+            -1 * (event.delta // 120), "units"
+        ),
+    )
+    my_scrollbar.bind(
+        "<MouseWheel>",
+        lambda event: canvas_plant_list.yview_scroll(
+            -1 * (event.delta // 120), "units"
+        ),
+    )
+
+    plant_list_frame = tk.Frame(canvas_plant_list)
+    canvas_plant_list.create_window((0, 0), window=plant_list_frame, anchor="nw")
 
     # plant_list_label_frame
     plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
-    plant_list_label_frame.propagate(False)
+    # plant_list_label_frame.propagate(False)
     plant_list_label_frame.columnconfigure(0, weight=1)
     add_new_plant_btn.grid(row=0, column=0, sticky="w")
 
+    ######################################################################################
+    ######################################################################################
+    ######################################################################################
     # pot_list_label_frame widgets
     pot_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
