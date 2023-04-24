@@ -10,11 +10,15 @@ database_name = "pyflora"
 collection_name_plants = "plants"
 collection_name_pots = "pots"
 collection_name_users = "users"
+collection_name_user_plant = "user_plant"
 
 
 def main():
     my_plant_service = PlantService(
-        connection_uri, database_name, collection_name_plants
+        connection_uri,
+        database_name,
+        collection_name_plants,
+        collection_name_user_plant,
     )
     # my_plant_service.find_all_plants()
     my_pot_service = PotService(connection_uri, database_name, collection_name_pots)
