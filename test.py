@@ -24,49 +24,17 @@ def main():
         connection_uri, database_name, collection_name_users
     )
 
-    # my_plant_service.save_plant_for_user( "6436d92c71034b4156556e28", "643ea5a565423be96a729c5a"    )
+    #my_plant_service.save_plant_for_user( "644667755556f1581b214a8b", "64481fb3afa741f6b0ea9c04"    )
 
-    some_data = my_plant_service.get_user_plants("64355ec03a881fc338fadc5d")
+    # some_data = my_plant_service.get_user_plants("64355ec03a881fc338fadc5d")
 
-    my_plant_service.delete_user_plant(
-        "64418c1b211c7806cace8b61"
-    )  # tu saljes id od pot_plant "dokumenta"
+    # my_plant_service.delete_user_plant("64418c1b211c7806cace8b61")  # tu saljes id od pot_plant "dokumenta"
 
     print("test gotov")
+    plants = my_plant_service.get_user_plants("644667755556f1581b214a8b")
+    # print(some_data)
+    # my_plant_service.save_plant_for_user(        "644667755556f1581b214a8b", "64466747b4a5c6af6eae2a54"    )
 
 
 if __name__ == "__main__":
     main()
-"""canvas_plant_list = tk.Canvas(
-        plant_list_label_frame,
-        bg="red",
-        width=948,
-        height=400,
-    )
-    canvas_plant_list.grid(row=1, column=0, sticky="nsew")
-
-    my_scrollbar = tk.Scrollbar(
-        plant_list_label_frame,
-        orient="vertical",
-        command=canvas_plant_list.yview,
-    )
-    my_scrollbar.grid(row=1, column=1, sticky="ns")
-    canvas_plant_list.configure(yscrollcommand=my_scrollbar.set)
-    plant_list_frame = tk.Frame(canvas_plant_list)
-    canvas_plant_list.create_window((0, 0), window=plant_list_frame, anchor="nw")
-
-    canvas_plant_list.configure(scrollregion=canvas_plant_list.bbox("all"))
-    canvas_plant_list.configure(scrollregion=plant_list_frame.bbox("all"))
-
-    canvas_plant_list.bind(
-        "<Configure>",
-        lambda event: canvas_plant_list.configure(
-            scrollregion=canvas_plant_list.bbox("all")
-        ),
-    )
-    my_scrollbar.bind(
-        "<MouseWheel>",
-        lambda event: canvas_plant_list.yview_scroll(
-            -1 * (event.delta // 120), "units"
-        ),
-    )"""

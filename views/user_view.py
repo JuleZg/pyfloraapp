@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from model.plant_widget import PlantWidget
 
 
 def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
@@ -170,82 +171,32 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         )
         window.after(1000, update_time)
 
+    def load_plants():
+        for widget in plant_frame.winfo_children():
+            widget.destroy()
+        user_plants = my_plant_service.get_user_plants(current_user_id)
+
+        for plant in user_plants:
+            plant_widget = PlantWidget(plant_frame, plant, my_plant_service)
+            # add the PlantWidget to the GUI
+            plant_widget.pack(
+                side="top", padx=1, pady=1, anchor="nw", fill="x", expand=True
+            )
+            
+
     def add_new_plant():
-        # connection_uri = "mongodb://localhost:27017/"
-        # database_name = "pyflora"
-        # collection_name_plants = "plants"
-        # collection_name_pots = "pots"
-        # collection_name_users = "users"
-        global current_row
-        current_row = 1
-        # my_plant_service = PlantService(
-        #   connection_uri, database_name, collection_name_plants
-        # )
         window = tk.Tk()
         window.geometry("1700x600")
         print(current_user)
+        print("USER ID:", current_user_id)
 
         def add_plant():
-            global current_row
             item = plants_table.selection()[0]
             values = plants_table.item(item, "values")
             plant_id = values[0]
-            """name = values[1]
-            type = values[2]
-            watering = values[3]
-            description = values[4]"""
-
             my_plant_service.save_plant_for_user(current_user_id, plant_id)
-            """plant_label = tk.Label(plant_list_frame, borderwidth=2, relief="groove")
-
-            plant_name = tk.Label(plant_label, text="Name: \t\tn/a", justify="left")
-            plant_type = tk.Label(plant_label, text="Type: \t\tn/a", justify="left")
-            plant_watering = tk.Label(
-                plant_label, text="Watering: \tn/a", justify="left"
-            )
-            plant_desc = tk.Label(plant_label, text="Description: \tn/a", anchor="w")
-            image = Image.open("plant_img/rose.png")
-            photo = ImageTk.PhotoImage(image.resize((150, 170)))
-            plant_img = tk.Label(plant_label, image=photo, height=170, width=150)
-            del_my_plant_btn = tk.Button(
-                plant_label, text="Delete My Plant", padx=5, pady=5, width=20
-            )
-
-            plant_name["text"] = "Name: \t\t{}".format(name)
-            plant_type["text"] = "Type: \t\t{}".format(type)
-            plant_watering["text"] = "Watering: \t{}".format(watering)
-            plant_desc["text"] = "Description: \t{}".format(description)
-
-            canvas_plant_list.configure(scrollregion=canvas_plant_list.bbox("all"))
-            canvas_plant_list.bind_all(
-                "<MouseWheel>",
-                lambda event: canvas_plant_list.yview_scroll(
-                    -1 * (event.delta // 120), "units"
-                ),
-            )
-            canvas_plant_list.configure(scrollregion=canvas_plant_list.bbox("all"))
-            canvas_plant_list.bind(
-                "<Configure>",
-                lambda event: canvas_plant_list.configure(
-                    scrollregion=canvas_plant_list.bbox("all")
-                ),
-            )
-            current_row += 1
-
-            plant_label.grid(row=current_row, column=0, pady=10, sticky="nsew")
-            plant_label.columnconfigure(0, weight=1)
-            plant_name.grid(row=1, column=0, sticky="w")
-            plant_type.grid(row=2, column=0, sticky="w")
-            plant_watering.grid(row=3, column=0, sticky="w")
-            plant_desc.grid(row=4, column=0, sticky="ew")
-            plant_img.grid(row=1, column=1, sticky="e", rowspan=3)
-            del_my_plant_btn.grid(row=4, column=1)"""
-
+            load_plants()
             return None
-
-        ######################################################################################
-        ######################################################################################
-        ######################################################################################
 
         plants = my_plant_service.find_all_plants()
         plants_table_frame = tk.Frame(window)
@@ -255,11 +206,11 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         )
         add_plant_button.pack(side="top", padx=10, pady=10)
 
-        def close_add_plant():
+        def close_add_new_plant():
             window.destroy()
 
         close_button = tk.Button(
-            plants_table_frame, text="Close", command=close_add_plant, width=15
+            plants_table_frame, text="Close", command=close_add_new_plant, width=15
         )
         close_button.pack(side="top", anchor="ne", padx=10, pady=10)
         plants_table = ttk.Treeview(
@@ -303,16 +254,8 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
 
     window = tk.Tk()
     window.geometry("1920x1000")
-    window.attributes("-fullscreen", True)
+    # window.attributes("-fullscreen", True)
     window.protocol("WM_DELETE_WINDOW", on_closing)
-
-    # get the screen width and height
-    # screen_width = window.winfo_screenwidth()
-    # screen_height = window.winfo_screenheight()
-    # x = (screen_width // 2) - (1920 // 2)
-    # y = (screen_height // 2) - (1080 // 2)
-    # window.geometry(f"+{x}+{y}")
-    # ####################  header_frame  ####################
 
     # ####################  header_frame  ####################
     header_frame = tk.LabelFrame(
@@ -324,7 +267,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         bg=header_bg,
     )
 
-    # header date, time, temperature
+    # header - date, time, temperature
     date_time_label = tk.Label(
         header_frame,
         bg=header_bg,
@@ -397,16 +340,15 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         justify="left",
         bg=sensor_monitor_frame_bg,
     )
+    # ####################charts####################
     # chart frame
     chart_frame = tk.Frame(sensor_chart_frame, bg=sensor_monitor_frame_bg)
-
-    # ####################charts####################
     # chart 1
     chart_light_values = sync_data()["chart_light_values_list"]["value"]
     fig = plt.Figure(
         figsize=(chart_frame.winfo_width() / 100, chart_frame.winfo_height() / 100),
         dpi=100,
-        tight_layout=True,
+        # tight_layout=True,
     )
     ax = fig.add_subplot(111)
     ax.bar(range(len(chart_light_values)), chart_light_values)
@@ -418,7 +360,6 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
 
     canvas_light_chart = FigureCanvasTkAgg(fig, master=chart_frame)
     canvas_light_chart.draw()
-
     # chart 2
     humidity_values = sync_data()["chart_light_values_list"]["value"]
     fig = Figure(
@@ -435,6 +376,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     canvas_humidity_chart = FigureCanvasTkAgg(fig, master=chart_frame)
     canvas_humidity_chart.draw()
 
+    # TODO: user info label
     user_info_label = tk.Label(chart_frame, text="User Info")
 
     # ####################sensor_chart_frame positioning####################
@@ -469,7 +411,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     )
     user_info_label.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
     user_info_label.config(anchor="center")
-
+    ##############################################################
     # ####################plant_pot_list_frame####################
     plant_pot_list_frame = tk.LabelFrame(window, padx=10, pady=10)
     plant_list_label_frame = tk.LabelFrame(
@@ -482,7 +424,6 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         pady=5,
         width=948,
         height=620,
-        bg=header_bg,
     )
 
     # plant_list_label_frame widgets
@@ -494,41 +435,53 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         pady=5,
         width=20,
         command=add_new_plant,
-        bg="blue",
     )
 
-    # plant_list_label_frame
+    # plant_list_label_frame scrollable
     plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
     plant_list_label_frame.columnconfigure(0, weight=1)
     add_new_plant_btn.pack(side="top", anchor="nw")
 
     scrollable_canvas = tk.Canvas(
-        plant_list_label_frame, borderwidth=0, highlightthickness=0, bg="red"
+        plant_list_label_frame,
+        borderwidth=0,
+        highlightthickness=0,
+        bg="red",
     )
     scrollable_canvas.pack(side="left", fill="both", expand=True, anchor="nw")
+
+    def set_plant_frame_width():
+        plant_frame.configure(width=scrollable_canvas.winfo_width())
+
+    # Call set_plant_frame_width after the main event loop has processed all pending events
+    scrollable_canvas.after_idle(set_plant_frame_width)
+
     scrollbar = tk.Scrollbar(
         plant_list_label_frame, orient="vertical", command=scrollable_canvas.yview
     )
     scrollable_canvas.config(yscrollcommand=scrollbar.set)
-    plants_frame = tk.Frame(scrollable_canvas)
-    scrollable_canvas.create_window((0, 0), window=plants_frame, anchor="nw")
     scrollbar.pack(side="right", fill="y")
+
+    plant_frame = tk.Frame(scrollable_canvas, pady=5, bg="green", width=900)
+    plant_frame.pack(side="top", fill="x", expand=True, anchor="nw")
+    
+    scrollable_canvas.create_window((0, 0), window=plant_frame)
     scrollable_canvas.bind(
         "<MouseWheel>",
         lambda event: scrollable_canvas.yview_scroll(
             int(-1 * (event.delta / 120)), "units"
         ),
     )
-    plants_frame.bind(
+    plant_frame.bind(
         "<Configure>",
         lambda event, canvas=scrollable_canvas: canvas.configure(
             scrollregion=canvas.bbox("all")
         ),
     )
+    ##############################################################
 
-    ######################################################################################
-    ######################################################################################
-    ######################################################################################
+    ##############################################################
+    # TODO: planted pots
     # pot_list_label_frame widgets
     pot_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
@@ -605,12 +558,12 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     plant_name_pot.grid(row=0, column=2, sticky="w")
     plant_type_pot.grid(row=1, column=2, sticky="w")
     plant_watering_pot.grid(row=2, column=2, sticky="w")
-
     pot_list_label_frame.update()
 
     print(plant_list_label_frame.winfo_width(), plant_list_label_frame.winfo_height())
     print(pot_list_label_frame.winfo_width(), pot_list_label_frame.winfo_height())
 
     update_time()  # start updating the time label
+    load_plants()
     window.update()
     window.mainloop()

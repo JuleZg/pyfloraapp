@@ -1,16 +1,10 @@
-import tkinter as tk
+from tkinter import *
+from turtle import window_height, window_width
 
-# create the main window
-root = tk.Tk()
-root.geometry("400x200")
-
-# create two frames
-frame1 = tk.Frame(root, bg="red", width=200, height=200)
-frame2 = tk.Frame(root, bg="blue", width=200, height=200)
-
-# pack the frames side by side
-frame1.pack(side="left", fill="both", expand=True)
-frame2.pack(side="right", fill="both", expand=True)
-
-# start the main loop
-root.mainloop()
+window = Tk()
+window.geometry("800x600")
+frame = Frame(window, width=500, height=400, bg="red")
+frame.pack(side="top")
+label = Label(frame, text="Hello, world!", width=300, height=200, bg="red")
+label.grid(row=0, column=0, sticky="nesw")
+window.mainloop()

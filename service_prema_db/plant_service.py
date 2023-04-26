@@ -87,7 +87,7 @@ class PlantService:
 
         return print(plant_dict_name["name"], "img inserted.")
 
-    def save_plant_for_user(self, user_id, plant_id) -> None:
+    def save_plant_for_user(self, user_id, plant_id):
         document = {"user_id": user_id, "plant_id": plant_id, "pot_id": None}
         # existing_doc = self.collection_user_plant.find_one(document)
         self.collection_user_plant.insert_one(document)
@@ -103,6 +103,9 @@ class PlantService:
             plant_details = self.collection_plant.find_one({"_id": plant_id_obj})
             if plant_details:
                 plant_data.append({**plant_details, **plant})
+
+        print("*" * 150)
+        print(plant_data)
         return plant_data
 
     def add_plant_to_pot(self, user_plant_id, pot_id):
@@ -113,6 +116,6 @@ class PlantService:
         # dodaj mu pot_id
 
     def delete_user_plant(self, user_plant_id):
-        user_plant_id_obj = ObjectId(user_plant_id)  # ovo ako saljes kao string
-        result = self.collection_user_plant.delete_one({"_id": user_plant_id_obj})
+        #user_plant_id_obj = ObjectId(user_plant_id)  # ovo ako saljes kao string
+        result = self.collection_user_plant.delete_one({"_id": user_plant_id})
         return result.deleted_count
