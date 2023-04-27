@@ -1,3 +1,4 @@
+from doctest import master
 import tkinter as tk
 from tkinter import RIGHT, ttk
 import random
@@ -177,12 +178,16 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         user_plants = my_plant_service.get_user_plants(current_user_id)
 
         for plant in user_plants:
-            plant_widget = PlantWidget(plant_frame, plant, my_plant_service)
+            plant_widget = PlantWidget(
+                plant_frame,
+                plant,
+                my_plant_service,
+            )
+
             # add the PlantWidget to the GUI
             plant_widget.pack(
-                side="top", padx=1, pady=1, anchor="nw", fill="x", expand=True
+                side="top", padx=2, pady=2, fill="both", expand=True, anchor="w"
             )
-            
 
     def add_new_plant():
         window = tk.Tk()
@@ -212,7 +217,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         close_button = tk.Button(
             plants_table_frame, text="Close", command=close_add_new_plant, width=15
         )
-        close_button.pack(side="top", anchor="ne", padx=10, pady=10)
+        close_button.pack(side="top", anchor="n", padx=10, pady=10)
         plants_table = ttk.Treeview(
             plants_table_frame,
             columns=("_id", "name", "type", "watering", "description"),
@@ -422,12 +427,9 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         labelanchor="n",
         padx=5,
         pady=5,
-        width=948,
-        height=620,
     )
 
     # plant_list_label_frame widgets
-
     add_new_plant_btn = tk.Button(
         plant_list_label_frame,
         text="Add New Plant",
@@ -441,20 +443,11 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
     plant_list_label_frame.columnconfigure(0, weight=1)
     add_new_plant_btn.pack(side="top", anchor="nw")
-
     scrollable_canvas = tk.Canvas(
-        plant_list_label_frame,
-        borderwidth=0,
-        highlightthickness=0,
-        bg="red",
+        plant_list_label_frame, borderwidth=0, highlightthickness=0, bg="red"
     )
-    scrollable_canvas.pack(side="left", fill="both", expand=True, anchor="nw")
-
-    def set_plant_frame_width():
-        plant_frame.configure(width=scrollable_canvas.winfo_width())
-
-    # Call set_plant_frame_width after the main event loop has processed all pending events
-    scrollable_canvas.after_idle(set_plant_frame_width)
+    scrollable_canvas.pack(side="left", fill="both", expand=True)  # , anchor="nw"
+    scrollable_canvas.configure(width=500)
 
     scrollbar = tk.Scrollbar(
         plant_list_label_frame, orient="vertical", command=scrollable_canvas.yview
@@ -462,9 +455,9 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     scrollable_canvas.config(yscrollcommand=scrollbar.set)
     scrollbar.pack(side="right", fill="y")
 
-    plant_frame = tk.Frame(scrollable_canvas, pady=5, bg="green", width=900)
-    plant_frame.pack(side="top", fill="x", expand=True, anchor="nw")
-    
+    plant_frame = tk.Frame(scrollable_canvas, pady=5, bg="green")
+    plant_frame.pack(side="left", fill="x", expand=True)
+
     scrollable_canvas.create_window((0, 0), window=plant_frame)
     scrollable_canvas.bind(
         "<MouseWheel>",
@@ -491,13 +484,12 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         labelanchor="n",
         padx=5,
         pady=5,
-        width=50,
     )
     add_plant_to_pot = tk.Button(
         pot_list_label_frame, text="Add Plant to Pot", padx=5, pady=5, width=20
     )
     planted_pot_label = tk.Label(
-        pot_list_label_frame, borderwidth=2, relief="groove", width=50
+        pot_list_label_frame, borderwidth=2, relief="groove", bg="red"
     )
     planted_image = Image.open("planted_pots_img/rose_planted.png")
     planted_photo = ImageTk.PhotoImage(planted_image.resize((150, 170)))
@@ -560,8 +552,16 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     plant_watering_pot.grid(row=2, column=2, sticky="w")
     pot_list_label_frame.update()
 
-    print(plant_list_label_frame.winfo_width(), plant_list_label_frame.winfo_height())
-    print(pot_list_label_frame.winfo_width(), pot_list_label_frame.winfo_height())
+    print(
+        "plant_list_label_frame",
+        plant_list_label_frame.winfo_width(),
+        plant_list_label_frame.winfo_height(),
+    )
+    print(
+        "pot_list_label_frame",
+        pot_list_label_frame.winfo_width(),
+        pot_list_label_frame.winfo_height(),
+    )
 
     update_time()  # start updating the time label
     load_plants()
