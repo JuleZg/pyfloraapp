@@ -360,7 +360,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     ax.set_ylabel("Intensity")
     ax.set_title("Light Values")
     ax.set_xticks(range(len(chart_light_values)))
-    ax.set_xticklabels(["Mon", "Tue", "Wen", "Thu", "Fri"])
+    ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri"])
     ax.set_fc(sensor_monitor_frame_bg)
 
     canvas_light_chart = FigureCanvasTkAgg(fig, master=chart_frame)
@@ -376,7 +376,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     ax.set_title("Humidity Line Chart")
     ax.set_ylabel("Humidity")
     ax.set_xticks(range(len(humidity_values)))
-    ax.set_xticklabels(["Mon", "Tue", "Wen", "Thu", "Fri"])
+    ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri"])
     ax.set_fc(sensor_monitor_frame_bg)
     canvas_humidity_chart = FigureCanvasTkAgg(fig, master=chart_frame)
     canvas_humidity_chart.draw()
@@ -442,35 +442,79 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     # plant_list_label_frame scrollable
     plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
     plant_list_label_frame.columnconfigure(0, weight=1)
-    add_new_plant_btn.pack(side="top", anchor="nw")
+    add_new_plant_btn.pack(side="top", anchor="nw", pady=10)
     scrollable_canvas = tk.Canvas(
-        plant_list_label_frame, borderwidth=0, highlightthickness=0, bg="red"
+        plant_list_label_frame, borderwidth=0, highlightthickness=0
     )
     scrollable_canvas.pack(side="left", fill="both", expand=True)  # , anchor="nw"
-    scrollable_canvas.configure(width=500)
 
     scrollbar = tk.Scrollbar(
         plant_list_label_frame, orient="vertical", command=scrollable_canvas.yview
     )
+
     scrollable_canvas.config(yscrollcommand=scrollbar.set)
+
     scrollbar.pack(side="right", fill="y")
 
-    plant_frame = tk.Frame(scrollable_canvas, pady=5, bg="green")
+    plant_frame = tk.Frame(scrollable_canvas, pady=5)
     plant_frame.pack(side="left", fill="x", expand=True)
 
     scrollable_canvas.create_window((0, 0), window=plant_frame)
-    scrollable_canvas.bind(
+
+    plant_frame.update_idletasks()
+    scrollable_canvas.configure(scrollregion=scrollable_canvas.bbox("all"))
+    scrollable_canvas.yview_moveto(0)
+    scrollbar.set(0, 1)
+
+    scrollable_canvas.update_idletasks()
+    print(
+        "scrollable_canvas size: ",
+        scrollable_canvas.winfo_width(),
+        scrollable_canvas.winfo_height(),
+    )
+    print(
+        "scrollable_canvas position: ",
+        scrollable_canvas.winfo_x(),
+        scrollable_canvas.winfo_y(),
+    )
+
+    plant_frame.update_idletasks()
+    print("plant_frame size: ", plant_frame.winfo_width(), plant_frame.winfo_height())
+    print("plant_frame position: ", plant_frame.winfo_x(), plant_frame.winfo_y())
+
+    def on_mousewheel(event):
+        scrollable_canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+
+    plant_frame.bind_all("<MouseWheel>", on_mousewheel)
+    """scrollable_canvas.bind(
+        "<Enter>",  # bind MouseWheel event to plant_frame when mouse enters it
+        lambda event: plant_frame.bind(
+            "<MouseWheel>",
+            lambda event: scrollable_canvas.yview_scroll(
+                int(-1 * (event.delta / 120)), "units"
+            ),
+        ),
+    )"""
+    """scrollable_canvas.bind(
         "<MouseWheel>",
         lambda event: scrollable_canvas.yview_scroll(
             int(-1 * (event.delta / 120)), "units"
         ),
-    )
+    )"""
     plant_frame.bind(
         "<Configure>",
         lambda event, canvas=scrollable_canvas: canvas.configure(
             scrollregion=canvas.bbox("all")
         ),
     )
+
+    plant_frame.bind(
+        "<MouseWheel>",
+        lambda event: scrollable_canvas.yview_scroll(
+            int(-1 * (event.delta / 120)), "units"
+        ),
+    )
+
     ##############################################################
 
     ##############################################################
@@ -488,9 +532,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     add_plant_to_pot = tk.Button(
         pot_list_label_frame, text="Add Plant to Pot", padx=5, pady=5, width=20
     )
-    planted_pot_label = tk.Label(
-        pot_list_label_frame, borderwidth=2, relief="groove", bg="red"
-    )
+    planted_pot_label = tk.Label(pot_list_label_frame, borderwidth=2, relief="groove")
     planted_image = Image.open("planted_pots_img/rose_planted.png")
     planted_photo = ImageTk.PhotoImage(planted_image.resize((150, 170)))
     planted_img = tk.Label(

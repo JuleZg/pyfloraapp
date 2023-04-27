@@ -8,7 +8,7 @@ class PlantWidget(tk.Frame):  # tk.Frame
         self.destroy()
 
     def __init__(self, parent, plant, my_plant_service):
-        super().__init__(parent, borderwidth=2, relief="solid", bg="blue")
+        super().__init__(parent, borderwidth=2, relief="solid")
         self.values = plant
         self.my_plant_service = my_plant_service
         self.grid_columnconfigure(0, weight=1)
@@ -30,7 +30,7 @@ class PlantWidget(tk.Frame):  # tk.Frame
             self,
             justify="left",
             text="Description: \t{}".format(self.values["desc"]),
-            wraplength=750,
+            wraplength=720,
         )
 
         self.delete_button = tk.Button(
@@ -46,5 +46,5 @@ class PlantWidget(tk.Frame):  # tk.Frame
         type.grid(row=1, column=0, padx=10, pady=10, sticky="nw")
         watering.grid(row=2, column=0, padx=10, pady=10, sticky="nw")
         description.grid(row=3, column=0, padx=10, pady=10, sticky="nw")
-        self.delete_button.grid(row=3, column=1, padx=10, pady=10, sticky="nw")
-        planted_img.grid(row=0, column=1, padx=10, pady=10, sticky="nw", rowspan=3)
+        self.delete_button.grid(row=3, column=1, padx=5, pady=5, sticky="nw")
+        planted_img.grid(row=0, column=1, padx=5, pady=5, sticky="nw", rowspan=3)
