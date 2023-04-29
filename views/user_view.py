@@ -1,6 +1,5 @@
-from doctest import master
 import tkinter as tk
-from tkinter import RIGHT, ttk
+from tkinter import ttk
 import random
 from tkinter.messagebox import askokcancel
 import requests
@@ -192,8 +191,6 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     def add_new_plant():
         window = tk.Tk()
         window.geometry("1700x600")
-        print(current_user)
-        print("USER ID:", current_user_id)
 
         def add_plant():
             item = plants_table.selection()[0]
@@ -456,7 +453,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
 
     scrollbar.pack(side="right", fill="y")
 
-    plant_frame = tk.Frame(scrollable_canvas, pady=5)
+    plant_frame = tk.Frame(scrollable_canvas, pady=5, highlightbackground="red")
     plant_frame.pack(side="left", fill="x", expand=True)
 
     scrollable_canvas.create_window((0, 0), window=plant_frame)
@@ -467,20 +464,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     scrollbar.set(0, 1)
 
     scrollable_canvas.update_idletasks()
-    print(
-        "scrollable_canvas size: ",
-        scrollable_canvas.winfo_width(),
-        scrollable_canvas.winfo_height(),
-    )
-    print(
-        "scrollable_canvas position: ",
-        scrollable_canvas.winfo_x(),
-        scrollable_canvas.winfo_y(),
-    )
-
     plant_frame.update_idletasks()
-    print("plant_frame size: ", plant_frame.winfo_width(), plant_frame.winfo_height())
-    print("plant_frame position: ", plant_frame.winfo_x(), plant_frame.winfo_y())
 
     def on_mousewheel(event):
         scrollable_canvas.yview_scroll(-1 * int(event.delta / 120), "units")
@@ -533,7 +517,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         pot_list_label_frame, text="Add Plant to Pot", padx=5, pady=5, width=20
     )
     planted_pot_label = tk.Label(pot_list_label_frame, borderwidth=2, relief="groove")
-    planted_image = Image.open("planted_pots_img/rose_planted.png")
+    planted_image = Image.open("planted_pots_img/planted_rose.png")
     planted_photo = ImageTk.PhotoImage(planted_image.resize((150, 170)))
     planted_img = tk.Label(
         planted_pot_label, image=planted_photo, height=170, width=150
@@ -594,7 +578,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     plant_watering_pot.grid(row=2, column=2, sticky="w")
     pot_list_label_frame.update()
 
-    print(
+    """print(
         "plant_list_label_frame",
         plant_list_label_frame.winfo_width(),
         plant_list_label_frame.winfo_height(),
@@ -603,7 +587,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         "pot_list_label_frame",
         pot_list_label_frame.winfo_width(),
         pot_list_label_frame.winfo_height(),
-    )
+    )"""
 
     update_time()  # start updating the time label
     load_plants()

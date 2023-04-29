@@ -1,6 +1,14 @@
 import pymongo
 import random
 from bson.binary import Binary
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+from PIL import Image
+import io
+
+import os
+from pymongo import MongoClient
+from bson.binary import Binary
 
 
 # drops collection if it exists
@@ -22,7 +30,7 @@ db = client["pyflora"]
 # Create a collection for the users
 collection_name = "users"
 collection = db[collection_name]
-#drop_collection(collection_name, db)
+# drop_collection(collection_name, db)
 users = [
     {
         "username": "admin",
@@ -53,7 +61,7 @@ plants = [
     {
         "name": "Rose",
         "type": "Flower",
-        "watering": "Twice a week,",
+        "watering": "Twice a week",
         "desc": "A popular flowering plant known for its sweet fragrance and variety of colors. Roses require regular watering and pruning to maintain their health and appearance.",
     },
     {
@@ -169,6 +177,7 @@ plants = [
         "type": "Cactus",
         "watering": "Once a month",
         "desc": "A type of succulent plant that comes in many shapes and sizes, often with prickly spines. Cacti prefer bright, indirect light and infrequent watering.",
+        "img_data": "",
     },
 ]
 

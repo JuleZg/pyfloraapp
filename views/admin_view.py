@@ -2,11 +2,13 @@ from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import ttk
 import datetime
+import sys
 
 
 def admin_view(my_users_service):
     def on_closing():
         if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
+            sys.exit(0)
             window.destroy()
 
     # methods for add new user, delete selected user
