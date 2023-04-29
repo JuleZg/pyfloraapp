@@ -184,6 +184,28 @@ plants = [
 
 # Insert the plant data into the collection
 collection.insert_many(plants)
+# get a list of all image files in the "plant_img" folder
+img_folder = "plant_img/"
+img_files = [
+    f
+    for f in os.listdir(img_folder)
+    if os.path.isfile(os.path.join(img_folder, f)) and f.endswith(".png")
+]
+
+# loop through each image file
+for img_file in img_files:
+    # get the name of the file without the ".png" extension
+    name = os.path.splitext(img_file)[0]
+    # check if there is a document in the collection with a matching "name" field
+    doc = collection.find_one({"name": name})
+    if doc:
+        # if there is a matching document, read the image file and convert it to binary data
+        with open(os.path.join(img_folder, img_file), "rb") as f:
+            binary_data = Binary(f.read())
+        # add the binary data as a new field called "image_data" to the matching document
+        collection.update_one(
+            {"_id": doc["_id"]}, {"$set": {"image_data": binary_data}}
+        )
 
 # Print the inserted data
 for plant in collection.find():
