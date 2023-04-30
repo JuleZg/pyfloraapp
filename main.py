@@ -1,5 +1,5 @@
+from bson import ObjectId
 from service_prema_db.plant_service import PlantService
-from service_prema_db.pot_service import PotService
 from service_prema_db.users_service import UsersService
 from views.login import login_gui
 
@@ -20,7 +20,6 @@ def main():
         collection_name_user_plant,
     )
     # my_plant_service.find_all_plants()
-    my_pot_service = PotService(connection_uri, database_name, collection_name_pots)
 
     my_users_service = UsersService(
         connection_uri, database_name, collection_name_users
@@ -36,7 +35,10 @@ def main():
     # my_plant_service.get_user_plants("644667755556f1581b214a8b")
     # print(some_data)
     # my_plant_service.save_plant_for_user(        "644667755556f1581b214a8b", "64466747b4a5c6af6eae2a54"    )
-    login_gui(my_users_service, my_pot_service, my_plant_service)
+
+    login_gui(my_users_service, my_plant_service)
+    #my_plant_service.add_plant_to_pot(ObjectId("644e9e827a2669ba2e480377"))
+    #my_plant_service.handle_user_plant(ObjectId("644e9e827a2669ba2e480377"), False)
 
 
 if __name__ == "__main__":

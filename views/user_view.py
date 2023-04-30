@@ -9,9 +9,11 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from model.plant_widget import PlantWidget
+from model.pot_widget import PotWidget
+import sys
 
 
-def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
+def user_view(my_plant_service, current_user, current_user_id):
     def sync_data():
         # LIGHT SENSOR READINGS
         num_values = 5
@@ -144,7 +146,8 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
 
     def on_closing():
         if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
-            window.destroy()
+            # window.destroy()
+            sys.exit(0)
 
     def temp_data():
         MY_LAT = 45.790152  # Your latitude
@@ -174,17 +177,38 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     def load_plants():
         for widget in plant_frame.winfo_children():
             widget.destroy()
-        user_plants = my_plant_service.get_user_plants(current_user_id)
+        user_plants = my_plant_service.get_user_plants(current_user_id, False)
 
         for plant in user_plants:
             plant_widget = PlantWidget(
-                plant_frame,
-                plant,
-                my_plant_service,
+                plant_frame, plant, my_plant_service, load_planted_plants
             )
 
             # add the PlantWidget to the GUI
             plant_widget.pack(
+                side="top", padx=2, pady=2, fill="both", expand=True, anchor="w"
+            )
+
+    def update():
+        load_plants()
+        load_planted_plants()
+
+    def load_planted_plants():
+        for widget in pot_frame.winfo_children():
+            widget.destroy()
+        user_plants = my_plant_service.get_user_plants(current_user_id, True)
+
+        for plant in user_plants:
+            pot_widget = PotWidget(
+                pot_frame,
+                plant,
+                my_plant_service,
+            #    my_sensor_service
+            #    load_plants
+            )
+
+            # add the PlantWidget to the GUI
+            pot_widget.pack(
                 side="top", padx=2, pady=2, fill="both", expand=True, anchor="w"
             )
 
@@ -435,7 +459,10 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         width=20,
         command=add_new_plant,
     )
-
+    plant_pot_list_frame.pack(fill="both", expand=True)
+    plant_pot_list_frame.columnconfigure(0, weight=1, uniform="col")
+    plant_pot_list_frame.columnconfigure(1, weight=1, uniform="col")
+    plant_pot_list_frame.rowconfigure(0, weight=1)
     # plant_list_label_frame scrollable
     plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
     plant_list_label_frame.columnconfigure(0, weight=1)
@@ -470,21 +497,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         scrollable_canvas.yview_scroll(-1 * int(event.delta / 120), "units")
 
     plant_frame.bind_all("<MouseWheel>", on_mousewheel)
-    """scrollable_canvas.bind(
-        "<Enter>",  # bind MouseWheel event to plant_frame when mouse enters it
-        lambda event: plant_frame.bind(
-            "<MouseWheel>",
-            lambda event: scrollable_canvas.yview_scroll(
-                int(-1 * (event.delta / 120)), "units"
-            ),
-        ),
-    )"""
-    """scrollable_canvas.bind(
-        "<MouseWheel>",
-        lambda event: scrollable_canvas.yview_scroll(
-            int(-1 * (event.delta / 120)), "units"
-        ),
-    )"""
+
     plant_frame.bind(
         "<Configure>",
         lambda event, canvas=scrollable_canvas: canvas.configure(
@@ -513,10 +526,21 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
         padx=5,
         pady=5,
     )
+    pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
+    pot_list_label_frame.columnconfigure(1, weight=1)
     add_plant_to_pot = tk.Button(
-        pot_list_label_frame, text="Add Plant to Pot", padx=5, pady=5, width=20
+        pot_list_label_frame,
+        text="Refresh",
+        padx=5,
+        pady=5,
+        width=20,
+        # command=update,
     )
-    planted_pot_label = tk.Label(pot_list_label_frame, borderwidth=2, relief="groove")
+    # add_plant_to_pot.pack(side="top", padx=10, pady=10)
+    pot_frame = tk.Frame(pot_list_label_frame, pady=5, highlightbackground="red")
+    pot_frame.pack(side="top", fill="x", expand=True)
+
+    """planted_pot_label = tk.Label(pot_list_label_frame, borderwidth=2, relief="groove")
     planted_image = Image.open("planted_pots_img/planted_rose.png")
     planted_photo = ImageTk.PhotoImage(planted_image.resize((150, 170)))
     planted_img = tk.Label(
@@ -550,15 +574,11 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     )
 
     # ####################plant_pot_list_frame####################
-    plant_pot_list_frame.pack(fill="both", expand=True)
-    plant_pot_list_frame.columnconfigure(0, weight=1, uniform="col")
-    plant_pot_list_frame.columnconfigure(1, weight=1, uniform="col")
-    plant_pot_list_frame.rowconfigure(0, weight=1)
+    
 
     # pot_list_label_frame
     pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
     pot_list_label_frame.columnconfigure(1, weight=1)
-    add_plant_to_pot.grid(row=0, column=0)
     planted_pot_label.grid(row=1, column=0, pady=10, columnspan=2, sticky="nsew")
     planted_pot_label.columnconfigure(0, weight=1, uniform="col")
     planted_pot_label.columnconfigure(1, weight=1, uniform="col")
@@ -576,7 +596,7 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
     plant_name_pot.grid(row=0, column=2, sticky="w")
     plant_type_pot.grid(row=1, column=2, sticky="w")
     plant_watering_pot.grid(row=2, column=2, sticky="w")
-    pot_list_label_frame.update()
+    pot_list_label_frame.update()"""
 
     """print(
         "plant_list_label_frame",
@@ -591,5 +611,6 @@ def user_view(my_pot_service, my_plant_service, current_user, current_user_id):
 
     update_time()  # start updating the time label
     load_plants()
+    load_planted_plants()
     window.update()
     window.mainloop()

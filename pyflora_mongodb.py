@@ -4,11 +4,9 @@ from bson.binary import Binary
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from PIL import Image
-import io
-
 import os
-from pymongo import MongoClient
 from bson.binary import Binary
+import io
 
 
 # drops collection if it exists
@@ -208,12 +206,12 @@ for img_file in img_files:
         )
 
 # Print the inserted data
-for plant in collection.find():
-    print(plant)
+# for plant in collection.find():
+# print(plant)
 
 
 # Create a collection for the pots
-collection_name = "pots"
+"""collection_name = "pots"
 collection = db[collection_name]
 drop_collection(collection_name, db)
 
@@ -233,4 +231,4 @@ collection.insert_many(pots)
 
 # Print the inserted data
 for pot in collection.find():
-    print(pot)
+    print(pot)"""

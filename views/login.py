@@ -8,7 +8,7 @@ from views.admin_view import admin_view
 from views.user_view import user_view
 
 
-def login_gui(my_users_service, my_pot_service, my_plant_service):
+def login_gui(my_users_service, my_plant_service):
     def login_calback():
         username = username_entry.get()
         password = password_entry.get()
@@ -29,7 +29,7 @@ def login_gui(my_users_service, my_pot_service, my_plant_service):
             my_user_id = str(user["_id"])
             messagebox.showinfo("Welcome", "Hello " + my_name)
             window.destroy()
-            user_view(my_pot_service, my_plant_service, my_name, my_user_id)
+            user_view(my_plant_service, my_name, my_user_id)
 
     # Create a new tkinter window
     window = tk.Tk()

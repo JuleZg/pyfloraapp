@@ -5,6 +5,7 @@ from discord import Object
 import pymongo
 from typing import List
 from pymongo.errors import PyMongoError
+from sqlalchemy import false
 
 
 class PlantService:
@@ -59,17 +60,6 @@ class PlantService:
         plant_dict = self.collection_plant.delete_one({"_id": id_obj})
         return plant_dict
 
-    # update_plant_notes
-    def update_plant_notes(self, id, notes):
-        id_obj = ObjectId(id)
-        plant_dict_name = list(
-            self.collection_plant.find_one({"_id": id_obj})
-        )  # TODO: SVE U LIST STAVLJAT GDJE IMAS FIND
-        plant_dict_notes = {"$set": {"notes": notes}}
-        self.collection_plant.update_one({"_id": id_obj}, plant_dict_notes)
-        # print(f"Notes updated for plant '{plant_dict_name['name']}', and with note '{notes}'")
-        return plant_dict_name
-
     def insert_binary(self, id, img_path):
         with open(img_path, "rb") as f:
             image_data = f.read()
@@ -79,28 +69,29 @@ class PlantService:
         plant_dict_name = self.collection_plant.find_one({"_id": id_obj})
         return plant_dict_name["name"]
 
-    # insert img to plants collection
-
-    def insert_img(self, id):
-        with open("plant_img/rose.png", "rb") as f:
-            image_data = f.read()
-        id_obj = ObjectId(id)
-        plant_dict_name = self.collection_plant.find_one({"_id": id_obj})
-        plant_dict_img = {"$set": {"image": image_data}}
-        self.collection_plant.update_one({"_id": id_obj}, plant_dict_img)
-        # print(plant_dict_name["name"], "img inserted.")
-        return plant_dict_name["name"]
-
     def save_plant_for_user(self, user_id, plant_id):
-        document = {"user_id": user_id, "plant_id": plant_id, "pot_id": None}
+        document = {"user_id": user_id, "plant_id": plant_id, "planted": False}
         # existing_doc = self.collection_user_plant.find_one(document)
         self.collection_user_plant.insert_one(document)
 
     # dohvati listu id-eva iz users_plant collectiona - OK
     # za svaki id iz liste zovi plant collection kako bi dohvatio ostale podatke od planta
     # vrati sve plantove i njihove podatke
-    def get_user_plants(self, user_id):
+    """def get_user_plants(self, user_id):
         user_plants = self.collection_user_plant.find({"user_id": user_id})
+        plant_data = []
+        for plant in user_plants:
+            plant_id_obj = ObjectId(plant["plant_id"])
+            plant_details = self.collection_plant.find_one({"_id": plant_id_obj})
+            if plant_details:
+                plant_data.append({**plant_details, **plant})
+
+        return plant_data"""
+    
+    def get_user_plants(self, user_id, planted):
+        user_plants = self.collection_user_plant.find(
+            {"user_id": user_id, "planted": planted}
+        )
         plant_data = []
         for plant in user_plants:
             plant_id_obj = ObjectId(plant["plant_id"])
@@ -110,12 +101,11 @@ class PlantService:
 
         return plant_data
 
-    def add_plant_to_pot(self, user_plant_id, pot_id):
-        """user_id_obj = ObjectId(user_id)
-        plant_id_obj = ObjectId(plant_id)
-        pot_id_obj = ObjectId(pot_id)"""
-        # pronađi redak u tablici gdje se nalazi plant_id i user_id
-        # dodaj mu pot_id
+    def handle_user_plant(self, user_plant_id, planted):
+        user_plant = {"_id": user_plant_id}
+        planted_true = {"$set": {"planted": planted}}
+        user_plant = self.collection_user_plant.update_one(user_plant, planted_true)
+        print(user_plant)
 
     def delete_user_plant(self, user_plant_id):
         # user_plant_id_obj = ObjectId(user_plant_id)  # ovo ako saljes kao string
