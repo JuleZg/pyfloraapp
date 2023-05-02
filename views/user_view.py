@@ -203,11 +203,11 @@ def user_view(my_plant_service, current_user, current_user_id):
                 pot_frame,
                 plant,
                 my_plant_service,
-            #    my_sensor_service
-            #    load_plants
+                load_planted_plants,
+                load_plants
+                #    my_sensor_service
             )
 
-            # add the PlantWidget to the GUI
             pot_widget.pack(
                 side="top", padx=2, pady=2, fill="both", expand=True, anchor="w"
             )
@@ -534,9 +534,9 @@ def user_view(my_plant_service, current_user, current_user_id):
         padx=5,
         pady=5,
         width=20,
-        # command=update,
+        command=update,
     )
-    # add_plant_to_pot.pack(side="top", padx=10, pady=10)
+    add_plant_to_pot.pack(side="top", padx=10, pady=10)
     pot_frame = tk.Frame(pot_list_label_frame, pady=5, highlightbackground="red")
     pot_frame.pack(side="top", fill="x", expand=True)
 

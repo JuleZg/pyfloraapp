@@ -4,14 +4,20 @@ import io
 
 
 class PotWidget(tk.Frame):  # tk.Frame
-    def remove_from_pot(self):
+    def remove_from_pot(self, load_planted_plants, load_plants):
         self.my_plant_service.handle_user_plant(self.values["_id"], False)
         self.destroy()
+        load_planted_plants()
+        load_plants()
 
-    def __init__(self, parent, plant, my_plant_service):
+    def __init__(
+        self, parent, plant, my_plant_service, load_planted_plants, load_plants
+    ):
         super().__init__(parent, borderwidth=2, relief="groove")
         self.values = plant
         self.my_plant_service = my_plant_service
+        self.load_planted_plants = load_planted_plants
+        self.load_plants = load_plants
         self.grid_columnconfigure(0, weight=1)
 
         # retrieve image data from MongoDB
@@ -40,7 +46,8 @@ class PotWidget(tk.Frame):  # tk.Frame
         self.remove_from_pot_button = tk.Button(
             self,
             text="Remove from pot",
-            command=lambda: self.handle_user_plant(self.values["_id"], False),
+            command=lambda: self.remove_from_pot(self.load_planted_plants,load_plants),
+            # command=lambda: my_plant_service.handle_user_plant(self.values["_id"], False),
             width=20,
             padx=5,
             pady=5,
