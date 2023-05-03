@@ -19,7 +19,7 @@ class PlantWidget(tk.Frame):  # tk.Frame
         self.my_plant_service = my_plant_service
         self.load_planted_plants = load_planted_plants
         self.grid_columnconfigure(0, weight=1)
-
+        
         # retrieve image data from MongoDB
         image_data = self.values.get("image_data")
         if image_data is not None:

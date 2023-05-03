@@ -186,7 +186,7 @@ def user_view(my_plant_service, current_user, current_user_id):
 
             # add the PlantWidget to the GUI
             plant_widget.pack(
-                side="top", padx=2, pady=2, fill="both", expand=True, anchor="w"
+                side="top", padx=2, pady=2, fill="both", expand=True, anchor="nw"
             )
 
     def update():
@@ -200,12 +200,7 @@ def user_view(my_plant_service, current_user, current_user_id):
 
         for plant in user_plants:
             pot_widget = PotWidget(
-                pot_frame,
-                plant,
-                my_plant_service,
-                load_planted_plants,
-                load_plants
-                #    my_sensor_service
+                pot_frame, plant, my_plant_service, load_planted_plants, load_plants
             )
 
             pot_widget.pack(
@@ -280,7 +275,7 @@ def user_view(my_plant_service, current_user, current_user_id):
 
     window = tk.Tk()
     window.geometry("1920x1000")
-    # window.attributes("-fullscreen", True)
+    window.attributes("-fullscreen", True)
     window.protocol("WM_DELETE_WINDOW", on_closing)
 
     # ####################  header_frame  ####################
@@ -440,6 +435,11 @@ def user_view(my_plant_service, current_user, current_user_id):
     ##############################################################
     # ####################plant_pot_list_frame####################
     plant_pot_list_frame = tk.LabelFrame(window, padx=10, pady=10)
+    plant_pot_list_frame.pack(fill="both", expand=True)
+    plant_pot_list_frame.columnconfigure(0, weight=1, uniform="col")
+    plant_pot_list_frame.columnconfigure(1, weight=1, uniform="col")
+    plant_pot_list_frame.rowconfigure(0, weight=1)
+
     plant_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
         text="PLANT LIST",
@@ -449,6 +449,8 @@ def user_view(my_plant_service, current_user, current_user_id):
         padx=5,
         pady=5,
     )
+    plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
+    plant_list_label_frame.columnconfigure(0, weight=1)
 
     # plant_list_label_frame widgets
     add_new_plant_btn = tk.Button(
@@ -459,56 +461,48 @@ def user_view(my_plant_service, current_user, current_user_id):
         width=20,
         command=add_new_plant,
     )
-    plant_pot_list_frame.pack(fill="both", expand=True)
-    plant_pot_list_frame.columnconfigure(0, weight=1, uniform="col")
-    plant_pot_list_frame.columnconfigure(1, weight=1, uniform="col")
-    plant_pot_list_frame.rowconfigure(0, weight=1)
-    # plant_list_label_frame scrollable
-    plant_list_label_frame.grid(row=0, column=0, sticky="nsew")
-    plant_list_label_frame.columnconfigure(0, weight=1)
     add_new_plant_btn.pack(side="top", anchor="nw", pady=10)
+
     scrollable_canvas = tk.Canvas(
-        plant_list_label_frame, borderwidth=0, highlightthickness=0
+        plant_list_label_frame, borderwidth=0, highlightthickness=0, bg="red"
     )
     scrollable_canvas.pack(side="left", fill="both", expand=True)  # , anchor="nw"
 
     scrollbar = tk.Scrollbar(
         plant_list_label_frame, orient="vertical", command=scrollable_canvas.yview
     )
-
+    scrollbar.pack(side="right", fill="y")
     scrollable_canvas.config(yscrollcommand=scrollbar.set)
 
-    scrollbar.pack(side="right", fill="y")
+    plant_frame = tk.Frame(scrollable_canvas, pady=5)
+    plant_frame.pack(side="top", fill="both", anchor="w", expand=True)
 
-    plant_frame = tk.Frame(scrollable_canvas, pady=5, highlightbackground="red")
-    plant_frame.pack(side="left", fill="x", expand=True)
+    scrollable_canvas.create_window((454, 0), window=plant_frame)
 
-    scrollable_canvas.create_window((0, 0), window=plant_frame)
+    def enable_scroll(event):
+        scrollable_canvas.bind_all(
+            "<MouseWheel>",
+            lambda event: scrollable_canvas.yview_scroll(
+                int(-1 * (event.delta / 120)), "units"
+            ),
+        )
 
-    plant_frame.update_idletasks()
-    scrollable_canvas.configure(scrollregion=scrollable_canvas.bbox("all"))
-    scrollable_canvas.yview_moveto(0)
-    scrollbar.set(0, 1)
+    def disable_scroll(event):
+        scrollable_canvas.unbind_all("<MouseWheel>")
 
-    scrollable_canvas.update_idletasks()
-    plant_frame.update_idletasks()
-
-    def on_mousewheel(event):
-        scrollable_canvas.yview_scroll(-1 * int(event.delta / 120), "units")
-
-    plant_frame.bind_all("<MouseWheel>", on_mousewheel)
+    scrollable_canvas.bind("<Enter>", enable_scroll)
+    scrollable_canvas.bind("<Leave>", disable_scroll)
+    #    scrollable_canvas.bind_all(
+    #        "<MouseWheel>",
+    #        lambda event: scrollable_canvas.yview_scroll(
+    #            int(-1 * (event.delta / 120)), "units"
+    #        ),
+    #    )
 
     plant_frame.bind(
         "<Configure>",
         lambda event, canvas=scrollable_canvas: canvas.configure(
             scrollregion=canvas.bbox("all")
-        ),
-    )
-
-    plant_frame.bind(
-        "<MouseWheel>",
-        lambda event: scrollable_canvas.yview_scroll(
-            int(-1 * (event.delta / 120)), "units"
         ),
     )
 
@@ -528,7 +522,7 @@ def user_view(my_plant_service, current_user, current_user_id):
     )
     pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
     pot_list_label_frame.columnconfigure(1, weight=1)
-    add_plant_to_pot = tk.Button(
+    refresh = tk.Button(
         pot_list_label_frame,
         text="Refresh",
         padx=5,
@@ -536,7 +530,7 @@ def user_view(my_plant_service, current_user, current_user_id):
         width=20,
         command=update,
     )
-    add_plant_to_pot.pack(side="top", padx=10, pady=10)
+    # refresh.pack(side="top", padx=10, pady=10)
     pot_frame = tk.Frame(pot_list_label_frame, pady=5, highlightbackground="red")
     pot_frame.pack(side="top", fill="x", expand=True)
 
@@ -612,5 +606,6 @@ def user_view(my_plant_service, current_user, current_user_id):
     update_time()  # start updating the time label
     load_plants()
     load_planted_plants()
+
     window.update()
     window.mainloop()

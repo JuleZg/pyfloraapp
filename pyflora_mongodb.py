@@ -205,30 +205,9 @@ for img_file in img_files:
             {"_id": doc["_id"]}, {"$set": {"image_data": binary_data}}
         )
 
-# Print the inserted data
-# for plant in collection.find():
-# print(plant)
+#Print the inserted data
+for plant in collection.find():
+    print(plant["name"])
 
 
-# Create a collection for the pots
-"""collection_name = "pots"
-collection = db[collection_name]
-drop_collection(collection_name, db)
 
-pots = []
-for i in range(10):
-    pot = {
-        "name": f"Pot{i}",
-        "color": random.choice(["red", "blue", "green", "yellow"]),
-        "material": random.choice(["clay", "ceramic", "metal", "plastic"]),
-        "size": random.randint(5, 20),
-    }
-    pots.append(pot)
-
-# Insert the plant data into the collection
-collection.insert_many(pots)
-
-
-# Print the inserted data
-for pot in collection.find():
-    print(pot)"""
