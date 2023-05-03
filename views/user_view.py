@@ -200,11 +200,15 @@ def user_view(my_plant_service, current_user, current_user_id):
 
         for plant in user_plants:
             pot_widget = PotWidget(
-                pot_frame, plant, my_plant_service, load_planted_plants, load_plants
+                pot_frame,
+                plant,
+                my_plant_service,
+                load_planted_plants,
+                load_plants,
             )
 
             pot_widget.pack(
-                side="top", padx=2, pady=2, fill="both", expand=True, anchor="w"
+                side="top", padx=2, pady=2, fill="both", expand=True, anchor="nw"
             )
 
     def add_new_plant():
@@ -464,9 +468,9 @@ def user_view(my_plant_service, current_user, current_user_id):
     add_new_plant_btn.pack(side="top", anchor="nw", pady=10)
 
     scrollable_canvas = tk.Canvas(
-        plant_list_label_frame, borderwidth=0, highlightthickness=0, bg="red"
+        plant_list_label_frame, borderwidth=0, highlightthickness=0
     )
-    scrollable_canvas.pack(side="left", fill="both", expand=True)  # , anchor="nw"
+    scrollable_canvas.pack(side="left", fill="both", expand=True)
 
     scrollbar = tk.Scrollbar(
         plant_list_label_frame, orient="vertical", command=scrollable_canvas.yview
@@ -492,12 +496,6 @@ def user_view(my_plant_service, current_user, current_user_id):
 
     scrollable_canvas.bind("<Enter>", enable_scroll)
     scrollable_canvas.bind("<Leave>", disable_scroll)
-    #    scrollable_canvas.bind_all(
-    #        "<MouseWheel>",
-    #        lambda event: scrollable_canvas.yview_scroll(
-    #            int(-1 * (event.delta / 120)), "units"
-    #        ),
-    #    )
 
     plant_frame.bind(
         "<Configure>",
@@ -507,9 +505,7 @@ def user_view(my_plant_service, current_user, current_user_id):
     )
 
     ##############################################################
-
     ##############################################################
-    # TODO: planted pots
     # pot_list_label_frame widgets
     pot_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
@@ -522,6 +518,7 @@ def user_view(my_plant_service, current_user, current_user_id):
     )
     pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
     pot_list_label_frame.columnconfigure(1, weight=1)
+
     refresh = tk.Button(
         pot_list_label_frame,
         text="Refresh",
@@ -530,10 +527,44 @@ def user_view(my_plant_service, current_user, current_user_id):
         width=20,
         command=update,
     )
-    # refresh.pack(side="top", padx=10, pady=10)
-    pot_frame = tk.Frame(pot_list_label_frame, pady=5, highlightbackground="red")
-    pot_frame.pack(side="top", fill="x", expand=True)
+    # refresh.pack(side="top", anchor="nw", padx=10, pady=10)
 
+    scrollable_pot_canvas = tk.Canvas(
+        pot_list_label_frame, borderwidth=0, highlightthickness=0
+    )
+    scrollable_pot_canvas.pack(side="left", fill="both", expand=True)
+
+    scrollbar_pot = tk.Scrollbar(
+        pot_list_label_frame, orient="vertical", command=scrollable_pot_canvas.yview
+    )
+    scrollbar_pot.pack(side="right", fill="y")
+    scrollable_pot_canvas.config(yscrollcommand=scrollbar_pot.set)
+
+    pot_frame = tk.Frame(scrollable_pot_canvas, pady=5)
+    pot_frame.pack(side="top", fill="both", anchor="w", expand=True)
+
+    scrollable_pot_canvas.create_window((0, 0), window=pot_frame)
+
+    def enable_pot_scroll(event):
+        scrollable_pot_canvas.bind_all(
+            "<MouseWheel>",
+            lambda event: scrollable_pot_canvas.yview_scroll(
+                int(-1 * (event.delta / 120)), "units"
+            ),
+        )
+
+    def disable_scroll(event):
+        scrollable_pot_canvas.unbind_all("<MouseWheel>")
+
+    scrollable_pot_canvas.bind("<Enter>", enable_pot_scroll)
+    scrollable_pot_canvas.bind("<Leave>", enable_pot_scroll)
+
+    pot_frame.bind(
+        "<Configure>",
+        lambda event, canvas=scrollable_pot_canvas: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        ),
+    )
     """planted_pot_label = tk.Label(pot_list_label_frame, borderwidth=2, relief="groove")
     planted_image = Image.open("planted_pots_img/planted_rose.png")
     planted_photo = ImageTk.PhotoImage(planted_image.resize((150, 170)))
