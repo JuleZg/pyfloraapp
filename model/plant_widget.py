@@ -31,7 +31,6 @@ class PlantWidget(tk.Frame):  # tk.Frame
 
             # create label with image
             image_label = tk.Label(self, image=self.image_photo, height=170, width=150)
-            image_label.grid(row=0, column=1, padx=5, pady=5, sticky="nw", rowspan=3)
 
         name = tk.Label(
             self, justify="left", text="Name: \t\t{}".format(self.values["name"])
@@ -72,4 +71,5 @@ class PlantWidget(tk.Frame):  # tk.Frame
         watering.grid(row=2, column=0, padx=10, pady=10, sticky="nw")
         description.grid(row=3, column=0, padx=10, pady=10, sticky="nw")
         self.delete_button.grid(row=3, column=1, padx=5, pady=5, sticky="nw")
-        # planted_img.grid(row=0, column=1, padx=5, pady=5, sticky="nw", rowspan=3)
+        image_label.grid(row=0, column=1, padx=5, pady=5, sticky="nw", rowspan=3)
+

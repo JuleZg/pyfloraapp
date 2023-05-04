@@ -565,78 +565,9 @@ def user_view(my_plant_service, current_user, current_user_id):
             scrollregion=canvas.bbox("all")
         ),
     )
-    """planted_pot_label = tk.Label(pot_list_label_frame, borderwidth=2, relief="groove")
-    planted_image = Image.open("planted_pots_img/planted_rose.png")
-    planted_photo = ImageTk.PhotoImage(planted_image.resize((150, 170)))
-    planted_img = tk.Label(
-        planted_pot_label, image=planted_photo, height=170, width=150
-    )
-    del_planted_pot_btn = tk.Button(
-        planted_pot_label, text="Delete from Pot", padx=5, pady=5, width=20
-    )
-    light_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
-    humidity_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
-    ph_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
-    salintiy_sens = tk.Label(planted_pot_label, text="N/A", justify="left")
-    plant_name_pot = tk.Label(planted_pot_label, text="Name: \t\tRose", justify="left")
-    plant_type_pot = tk.Label(
-        planted_pot_label, text="Type: \t\tFlower", justify="left"
-    )
-    plant_watering_pot = tk.Label(
-        planted_pot_label, text="Watering: \tTwice a week", justify="left"
-    )
-    # planted_pot_label sensor data
-    sensor_data = sync_data()
-    light_sens["text"] = "Light Sensor: \t{}".format(
-        round(sensor_data["light"]["value"], 2)
-    )
-    humidity_sens["text"] = "Humidity Sensor: \t{}".format(
-        round(sensor_data["humidity"]["value"], 2)
-    )
-    ph_sens["text"] = "pH Sensor: \t{}".format(round(sensor_data["ph"]["value"], 2))
-    salintiy_sens["text"] = "Salinity Sensor: \t{}".format(
-        round(sensor_data["salinity"]["value"], 2)
-    )
-
-    # ####################plant_pot_list_frame####################
-    
-
-    # pot_list_label_frame
-    pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
-    pot_list_label_frame.columnconfigure(1, weight=1)
-    planted_pot_label.grid(row=1, column=0, pady=10, columnspan=2, sticky="nsew")
-    planted_pot_label.columnconfigure(0, weight=1, uniform="col")
-    planted_pot_label.columnconfigure(1, weight=1, uniform="col")
-    planted_pot_label.columnconfigure(2, weight=1, uniform="col")
-    planted_img.grid(row=0, column=0, sticky="w", rowspan=3)
-    planted_img.columnconfigure(0, weight=1, uniform="col")
-    del_planted_pot_btn.grid(row=3, column=0, sticky="w")
-    light_sens.grid(row=0, column=1, sticky="w")
-    humidity_sens.grid(row=1, column=1, sticky="w")
-    ph_sens.grid(row=2, column=1, sticky="w")
-    salintiy_sens.grid(row=3, column=1, sticky="w")
-    light_sens.columnconfigure(1, weight=1, uniform="col")
-    humidity_sens.columnconfigure(2, weight=1, uniform="col")
-    salintiy_sens.columnconfigure(3, weight=1, uniform="col")
-    plant_name_pot.grid(row=0, column=2, sticky="w")
-    plant_type_pot.grid(row=1, column=2, sticky="w")
-    plant_watering_pot.grid(row=2, column=2, sticky="w")
-    pot_list_label_frame.update()"""
-
-    """print(
-        "plant_list_label_frame",
-        plant_list_label_frame.winfo_width(),
-        plant_list_label_frame.winfo_height(),
-    )
-    print(
-        "pot_list_label_frame",
-        pot_list_label_frame.winfo_width(),
-        pot_list_label_frame.winfo_height(),
-    )"""
-
+  
     update_time()  # start updating the time label
     load_plants()
     load_planted_plants()
-
     window.update()
     window.mainloop()

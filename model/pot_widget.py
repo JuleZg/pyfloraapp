@@ -4,6 +4,7 @@ import tkinter as tk
 from PIL import ImageTk, Image
 import io
 import random
+import requests
 
 
 class PotWidget(tk.Frame):  # tk.Frame
@@ -156,8 +157,25 @@ class PotWidget(tk.Frame):  # tk.Frame
                 "chart_light_values_list": {"value": light_values},
             }
 
+        def temp_data():
+            MY_LAT = 45.790152  # Your latitude
+            MY_LONG = 16.005303  # Your longitude
+            MY_API = "b8fe2d48edaec121636871ffc793be7e"
+
+            # Construct the API request URL
+            api_url = f"https://api.openweathermap.org/data/2.5/weather?lat={MY_LAT}&lon={MY_LONG}&appid={MY_API}&units=metric"
+
+            # Send the API request and get the response
+            response = requests.get(api_url)
+            response_data = response.json()
+
+            # Extract the temperature from the response data for the current hour
+            temperature = response_data["main"]["temp"]
+
+            return temperature
+
         # self.grid_columnconfigure(0, weight=1)
-        image_data = self.values.get("image_data")
+        image_data = self.values.get("planted_image_data")
         if image_data is not None:
             # convert image data to PIL Image object
             image = Image.open(io.BytesIO(image_data))
@@ -167,7 +185,6 @@ class PotWidget(tk.Frame):  # tk.Frame
 
             # create label with image
             image_label = tk.Label(self, image=self.image_photo, height=170, width=150)
-            image_label.grid(row=0, column=2, padx=5, pady=5, sticky="nw", rowspan=3)
 
         name = tk.Label(
             self, justify="left", text="Name: \t\t{}".format(self.values["name"])
@@ -214,7 +231,7 @@ class PotWidget(tk.Frame):  # tk.Frame
         self.remove_from_pot_button.grid(
             row=4, column=0, columnspan=3, padx=5, pady=5, sticky="ew"
         )
-
+        image_label.grid(row=0, column=2, padx=5, pady=5, sticky="nw", rowspan=3)
         sensor_monitor_frame.grid(
             row=0, column=1, rowspan=3, padx=10, pady=10, sticky="nsew"
         )
@@ -228,86 +245,3 @@ class PotWidget(tk.Frame):  # tk.Frame
 
         if image_data is not None:
             image_label.grid(row=0, column=2, padx=5, pady=5, sticky="nsew", rowspan=4)
-
-        """
-        # retrieve image data from MongoDB
-        image_data = self.values.get("image_data")
-        if image_data is not None:
-            # convert image data to PIL Image object
-            image = Image.open(io.BytesIO(image_data))
-
-            # create PhotoImage from PIL Image object
-            self.image_photo = ImageTk.PhotoImage(image.resize((150, 170)))
-
-            # create label with image
-            image_label = tk.Label(self, image=self.image_photo, height=170, width=150)
-            image_label.grid(row=0, column=2, padx=5, pady=5, sticky="nw", rowspan=3)
-
-        name = tk.Label(
-            self, justify="left", text="Name: \t\t{}".format(self.values["name"])
-        )
-        type = tk.Label(
-            self, justify="left", text="Type: \t\t{}".format(self.values["type"])
-        )
-        watering = tk.Label(
-            self, justify="left", text="Watering: \t{}".format(self.values["watering"])
-        )
-
-        self.remove_from_pot_button = tk.Button(
-            self,
-            text="Remove from pot",
-            command=lambda: self.remove_from_pot(self.load_planted_plants, load_plants),
-            width=20,
-            padx=5,
-            pady=5,
-        )
-
-        # planted_pot_label sensor data
-
-        # sensor_monitor_frame gui
-        sensor_monitor_frame = tk.LabelFrame(self, text="Sensors Data")
-        self.sync_button = tk.Button(
-            self,
-            text="Sync",
-            # command=sync_data,
-        )
-        moisture_label = tk.Label(
-            self,
-            text="Moisture: N/A",
-            justify="left",
-        )
-        ph_label = tk.Label(
-            self,
-            text="pH: N/A",
-            justify="left",
-        )
-        salinity_label = tk.Label(
-            self,
-            text="Salinity: N/A",
-            justify="left",
-        )
-        light_label = tk.Label(
-            self,
-            text="Light: N/A",
-            justify="left",
-        )
-        temp_label = tk.Label(
-            self,
-            text="Temperature: N/A",
-            justify="left",
-        )
-
-        name.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
-        type.grid(row=1, column=0, padx=10, pady=10, sticky="nw")
-        watering.grid(row=2, column=0, padx=10, pady=10, sticky="nw")
-        self.remove_from_pot_button.grid(row=3, column=2, padx=5, pady=5, sticky="nw")
-
-        sensor_monitor_frame.grid(row=0, column=1,rowspan=4, padx=10, pady=10, sticky="nw")
-        sensor_monitor_frame.columnconfigure(1, weight=1, minsize=410)
-        self.sync_button.grid(column=0, row=5, padx=10, pady=10, sticky="ew")
-        moisture_label.grid(column=0, row=0, sticky="w", padx=10)
-        ph_label.grid(column=0, row=1, sticky="w", padx=10)
-        salinity_label.grid(column=0, row=2, sticky="w", padx=10)
-        light_label.grid(column=0, row=3, sticky="w", padx=10)
-        temp_label.grid(column=0, row=4, sticky="w", padx=10)
-        """
