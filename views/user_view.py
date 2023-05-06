@@ -276,6 +276,19 @@ def user_view(my_plant_service, current_user, current_user_id):
     header_font_fg = "#ffffff"
     sensor_monitor_frame_bg = "#F7E8AF"
     FONT = ("Roboto Mono", 12)
+    plant_list_bg = "#8BC34A"  # "#F5F5F5"
+    plant_list_fg = "#000000"
+    pot_list_bg = "#8FC1E3"
+    pot_list_fg = "#FFFFFF"
+
+    """For plant list:
+
+    Text color: #FFFFFF (white)
+    Background color: #8BC34A (light green)
+    For pot list:
+
+    Text color: #000000 (black)
+    Background color: #D7CCC8 (light brown)"""
 
     window = tk.Tk()
     window.geometry("1920x1000")
@@ -565,7 +578,7 @@ def user_view(my_plant_service, current_user, current_user_id):
             scrollregion=canvas.bbox("all")
         ),
     )
-  
+
     update_time()  # start updating the time label
     load_plants()
     load_planted_plants()

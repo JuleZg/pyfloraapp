@@ -207,7 +207,7 @@ class PotWidget(tk.Frame):  # tk.Frame
 
         # planted_pot_label sensor data
         # sensor_monitor_frame gui
-        sensor_monitor_frame = tk.LabelFrame(self, text="Sensors Data")
+        sensor_monitor_frame = tk.LabelFrame(self,text="Sensors Data")
         self.sync_button = tk.Button(
             sensor_monitor_frame,
             text="Sync",
@@ -218,7 +218,7 @@ class PotWidget(tk.Frame):  # tk.Frame
         )
         ph_label = tk.Label(sensor_monitor_frame, text="pH: N/A", justify="left")
         salinity_label = tk.Label(
-            sensor_monitor_frame, text="Salinity: N/A", justify="left"
+            sensor_monitor_frame,text="Salinity: N/A", justify="left"
         )
         light_label = tk.Label(sensor_monitor_frame, text="Light: N/A", justify="left")
         temp_label = tk.Label(

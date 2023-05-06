@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "644667755556f1581b214a8b"
+  },
+  "username": "a",
+  "password": "a",
+  "first_name": "Marko",
+  "last_name": "Marić",
+  "email": "marko@email.hr"
+},{
+  "_id": {
+    "$oid": "64481fb3afa741f6b0ea9c03"
+  },
+  "username": "admin",
+  "password": "admin",
+  "first_name": "Julijan",
+  "last_name": "Rajic",
+  "email": "email@mail.com"
+},{
+  "_id": {
+    "$oid": "645265fe8a81cf5af18483dd"
+  },
+  "username": "c",
+  "password": "c",
+  "first_name": "c",
+  "last_name": "c",
+  "email": "c"
+}]
