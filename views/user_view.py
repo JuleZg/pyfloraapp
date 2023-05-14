@@ -1,22 +1,20 @@
 import tkinter as tk
 from tkinter import ttk
 import random
-from tkinter.messagebox import askokcancel
 import requests
 import datetime
-from PIL import ImageTk, Image
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from model.plant_widget import PlantWidget
 from model.pot_widget import PotWidget
 import sys
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 def user_view(my_plant_service, current_user, current_user_id):
     def sync_data():
         # LIGHT SENSOR READINGS
-        num_values = 5
+        num_values = 7
         light_values = [random.randint(0, 100) for i in range(num_values)]
         # Grade the values based on the provided categories
         light_grades = []
@@ -43,8 +41,7 @@ def user_view(my_plant_service, current_user, current_user_id):
             {"label": "Very dry, in need of immediate watering", "min": 61, "max": 99},
         ]
 
-        # Define the number of values to generate
-        num_values = 5
+        num_values = 7
 
         # Generate random soil humidity values within the specified ranges
         humidity_values = []
@@ -59,18 +56,19 @@ def user_view(my_plant_service, current_user, current_user_id):
         # Choose a random humidity value and get its grade
         sync_humidity_values_index = random.randint(0, num_values - 1)
         sync_humidity_values = humidity_values[sync_humidity_values_index]
+        print("SYNC HUMIDITIY VALUES 0", sync_humidity_values)
         label = ""
         for r in ranges:
             if r["min"] <= sync_humidity_values <= r["max"]:
                 label = r["label"]
                 break
         sync_humidity_values_grade = label
-
+        print("HUMIDITIY VALUES 1 :", humidity_values)
         ## PH & SALINITY
         pH_range = (4.5, 8.5)
         salinity_range = (0.1, 1.0)
 
-        num_values = 5
+        num_values = 7
 
         pH_values = [
             random.uniform(pH_range[0], pH_range[1]) for i in range(num_values)
@@ -131,17 +129,28 @@ def user_view(my_plant_service, current_user, current_user_id):
 
         temp_label["text"] = "Temperature: \t{:.1f} \t°C".format(temp_data())
         return {
-            "light": {"value": sync_value_light, "grade": sync_value_grade_light},
+            "light": {
+                "value": sync_value_light,
+                "grade": sync_value_grade_light,
+            },
             "humidity": {
                 "value": sync_humidity_values,
                 "grade": sync_humidity_values_grade,
             },
-            "ph": {"value": sync_value_ph, "grade": sync_value_ph_grade},
+            "ph": {
+                "value": sync_value_ph,
+                "grade": sync_value_ph_grade,
+            },
             "salinity": {
                 "value": sync_value_salinity,
                 "grade": sync_value_salinity_grade,
             },
-            "chart_light_values_list": {"value": light_values},
+            "chart_light_values_list": {
+                "value": light_values,
+            },
+            "chart_humidity_values_list": {
+                "value": humidity_values,
+            },
         }
 
     def on_closing():
@@ -150,8 +159,8 @@ def user_view(my_plant_service, current_user, current_user_id):
             sys.exit(0)
 
     def temp_data():
-        MY_LAT = 45.790152  # Your latitude
-        MY_LONG = 16.005303  # Your longitude
+        MY_LAT = 45.790152
+        MY_LONG = 16.005303
         MY_API = "b8fe2d48edaec121636871ffc793be7e"
 
         # Construct the API request URL
@@ -161,7 +170,7 @@ def user_view(my_plant_service, current_user, current_user_id):
         response = requests.get(api_url)
         response_data = response.json()
 
-        # Extract the temperature from the response data for the current hour
+        # temperature from the response data for the current hour
         temperature = response_data["main"]["temp"]
 
         return temperature
@@ -181,17 +190,17 @@ def user_view(my_plant_service, current_user, current_user_id):
 
         for plant in user_plants:
             plant_widget = PlantWidget(
-                plant_frame, plant, my_plant_service, load_planted_plants
+                plant_frame,
+                plant,
+                my_plant_service,
+                load_planted_plants,
+                update_pie_chart,
             )
 
             # add the PlantWidget to the GUI
             plant_widget.pack(
                 side="top", padx=2, pady=2, fill="both", expand=True, anchor="nw"
             )
-
-    def update():
-        load_plants()
-        load_planted_plants()
 
     def load_planted_plants():
         for widget in pot_frame.winfo_children():
@@ -205,6 +214,7 @@ def user_view(my_plant_service, current_user, current_user_id):
                 my_plant_service,
                 load_planted_plants,
                 load_plants,
+                update_pie_chart,
             )
 
             pot_widget.pack(
@@ -221,6 +231,7 @@ def user_view(my_plant_service, current_user, current_user_id):
             plant_id = values[0]
             my_plant_service.save_plant_for_user(current_user_id, plant_id)
             load_plants()
+            update_pie_chart()
             return None
 
         plants = my_plant_service.find_all_plants()
@@ -269,6 +280,50 @@ def user_view(my_plant_service, current_user, current_user_id):
             )
 
         window.mainloop()
+
+    def update_pie_chart():
+        user_plants = my_plant_service.get_user_plants(current_user_id, False)
+        user_planted_plants = my_plant_service.get_user_plants(current_user_id, True)
+
+        total_plants = len(user_plants) + len(user_planted_plants)
+
+        if total_plants == 0:
+            # Hide or remove the pie chart
+            ax3.clear()
+            canvas_pie_chart.get_tk_widget().pack_forget()
+            ax3.set_title("No User Plants")
+        else:
+            # percentage_user_plants = (len(user_plants) / total_plants) * 100
+            # percentage_user_planted_plants = (
+            #    len(user_planted_plants) / total_plants
+            # ) * 100
+            labels = [
+                f"User Plants {len(user_plants)}",
+                f"Planted Plants {len(user_planted_plants)}",
+            ]
+            sizes = [len(user_plants), len(user_planted_plants)]
+            colors = ["lightblue", "lightgreen"]
+            # labels = ["User Plants", "User Planted Plants"]
+            # sizes = [percentage_user_plants, percentage_user_planted_plants]
+            # colors = ["lightblue", "lightgreen"]
+
+            ax3.clear()
+            ax3.pie(
+                sizes, labels=labels, colors=colors, autopct="%1.1f%%", startangle=140
+            )
+            ax3.set_title("User Plants vs User Planted Plants")
+            fig.set_facecolor(
+                sensor_monitor_frame_bg
+            )  # Set the background color of the entire figure
+            ax3.set_facecolor(
+                sensor_monitor_frame_bg
+            )  # Set the background color of the pie chart
+
+            # Redraw the pie chart
+            canvas_pie_chart.draw()
+            canvas_pie_chart.get_tk_widget().pack(
+                side=tk.LEFT, fill=tk.BOTH, expand=True
+            )
 
     header_bg = "#66c644"
     header_font = 9
@@ -378,77 +433,118 @@ def user_view(my_plant_service, current_user, current_user_id):
         justify="left",
         bg=sensor_monitor_frame_bg,
     )
-    # ####################charts####################
-    # chart frame
-    chart_frame = tk.Frame(sensor_chart_frame, bg=sensor_monitor_frame_bg)
-    # chart 1
-    chart_light_values = sync_data()["chart_light_values_list"]["value"]
-    fig = plt.Figure(
-        figsize=(chart_frame.winfo_width() / 100, chart_frame.winfo_height() / 100),
-        dpi=100,
-        # tight_layout=True,
-    )
-    ax = fig.add_subplot(111)
-    ax.bar(range(len(chart_light_values)), chart_light_values)
-    ax.set_ylabel("Intensity")
-    ax.set_title("Light Values")
-    ax.set_xticks(range(len(chart_light_values)))
-    ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri"])
-    ax.set_fc(sensor_monitor_frame_bg)
-
-    canvas_light_chart = FigureCanvasTkAgg(fig, master=chart_frame)
-    canvas_light_chart.draw()
-    # chart 2
-    humidity_values = sync_data()["chart_light_values_list"]["value"]
-    fig = Figure(
-        (chart_frame.winfo_width() / 100, chart_frame.winfo_height() / 100),
-        dpi=100,
-    )
-    ax = fig.add_subplot(111)
-    ax.plot(humidity_values)
-    ax.set_title("Humidity Line Chart")
-    ax.set_ylabel("Humidity")
-    ax.set_xticks(range(len(humidity_values)))
-    ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri"])
-    ax.set_fc(sensor_monitor_frame_bg)
-    canvas_humidity_chart = FigureCanvasTkAgg(fig, master=chart_frame)
-    canvas_humidity_chart.draw()
-
-    # TODO: user info label
-    user_info_label = tk.Label(chart_frame, text="User Info")
-
-    # ####################sensor_chart_frame positioning####################
-    sensor_chart_frame.pack(fill="x")
-    sensor_chart_frame.columnconfigure(0, weight=1, uniform="col")
-    sensor_chart_frame.columnconfigure(1, weight=1, uniform="col")
-    sensor_chart_frame.columnconfigure(2, weight=1, uniform="col")
-    sensor_chart_frame.columnconfigure(3, weight=1, uniform="col")
-    sensor_chart_frame.rowconfigure(0, weight=1, minsize=200, uniform="row")
     # sensor_monitor_frame positioning
     sensor_monitor_frame.pack(side="left", padx=10)
-    sensor_monitor_frame.columnconfigure(0, weight=1, minsize=410)
+    sensor_monitor_frame.columnconfigure(0, weight=1, minsize=400)
     sync_button.grid(column=0, row=5, padx=10, pady=10, sticky="ew")
     moisture_label.grid(column=0, row=0, sticky="w", padx=10)
     ph_label.grid(column=0, row=1, sticky="w", padx=10)
     salinity_label.grid(column=0, row=2, sticky="w", padx=10)
     light_label.grid(column=0, row=3, sticky="w", padx=10)
     temp_label.grid(column=0, row=4, sticky="w", padx=10)
-    # chart frame positioning
+    # ####################sensor_chart_frame positioning####################
+    sensor_chart_frame.pack(fill="x")
+    sensor_chart_frame.columnconfigure(0, weight=1, uniform="col")
+    sensor_chart_frame.columnconfigure(1, weight=1, uniform="col")
+    sensor_chart_frame.columnconfigure(2, weight=1, uniform="col")
+    sensor_chart_frame.columnconfigure(3, weight=1, uniform="col")
+    sensor_chart_frame.rowconfigure(0, weight=1, minsize=250, uniform="row")
+    # ####################charts####################
+    # chart frame
+    chart_frame = tk.Frame(sensor_chart_frame, bg=sensor_monitor_frame_bg)
     chart_frame.pack(fill="both", expand=True)
-    chart_frame.propagate = False
+
+    chart_width = 400
+    chart_min_height = 250
+
+    # light chart
+    chart_light_values = sync_data()["chart_light_values_list"]["value"]
+    chart_light = plt.figure(figsize=(chart_width / 100, chart_min_height / 100))
+    ax1 = chart_light.add_subplot(111)
+    days_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    ax1.bar(days_of_week, chart_light_values)
+    ax1.set_title("Light Chart")
+    chart_light.set_facecolor(sensor_monitor_frame_bg)
+    ax1.set_facecolor(sensor_monitor_frame_bg)
+
+    canvas1 = FigureCanvasTkAgg(chart_light, master=chart_frame)
+    canvas1.draw()
+    canvas1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    # humidity chart
+    chart_humidity_values = sync_data()["chart_humidity_values_list"]["value"]
+    chart_humidity = plt.figure(figsize=(chart_width / 100, chart_min_height / 100))
+    ax2 = chart_humidity.add_subplot(111)
+    ax2.plot(days_of_week, chart_humidity_values, marker="o")
+    ax2.set_title("Humidity Chart")
+    chart_humidity.set_facecolor(sensor_monitor_frame_bg)
+    ax2.set_facecolor(sensor_monitor_frame_bg)
+
+    canvas2 = FigureCanvasTkAgg(chart_humidity, master=chart_frame)
+    canvas2.draw()
+    canvas2.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    # pie chart
+    fig, ax3 = plt.subplots(
+        figsize=(chart_width / 100, chart_min_height / 100),
+        dpi=100,
+    )
+    canvas_pie_chart = FigureCanvasTkAgg(fig, master=chart_frame)
+
+    """user_plants = my_plant_service.get_user_plants(current_user_id, False)
+    user_planted_plants = my_plant_service.get_user_plants(current_user_id, True)
+
+    fig = plt.figure(figsize=(chart_width / 100, chart_min_height / 100))
+    ax3 = fig.add_subplot(111)
+
+    labels = ["User Plants", "Planted Plants"]
+    sizes = [len(user_plants), len(user_planted_plants)]
+
+    # Check if either user_plants or user_planted_plants is 0
+    if 0 in sizes:
+        # Display a message indicating there are no data points
+        no_data_message = "No data available"
+        ax3.text(
+            0.5,
+            0.5,
+            no_data_message,
+            horizontalalignment="center",
+            verticalalignment="center",
+            transform=ax3.transAxes,
+            fontsize=12,
+            color="gray",
+        )
+    else:
+        total_plants = sum(sizes)
+        percentages = [f"{(size / total_plants) * 100:.2f}%" for size in sizes]
+        labels = [
+            f"{label}\n({sizes[i]} plants, {percentages[i]})"
+            for i, label in enumerate(labels)
+        ]
+
+        # Plot the pie chart with the available data
+        ax3.pie(sizes, labels=labels)
+        ax3.set_title("User Plants")
+
+    fig.set_facecolor(
+        sensor_monitor_frame_bg
+    )  # Set the background color of the entire figure
+    ax3.set_facecolor(
+        sensor_monitor_frame_bg
+    )  # Set the background color of the pie chart
+
+    canvas3 = FigureCanvasTkAgg(fig, master=chart_frame)
+    canvas3.draw()
+    canvas3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=True)"""
+
+    """    # chart frame positioning
+    chart_frame.pack(fill="both", expand=True)
+    chart_frame.pack_propagate = False
     chart_frame.rowconfigure(0, minsize=300, uniform="row")
     chart_frame.columnconfigure(0, weight=1, uniform="col")
     chart_frame.columnconfigure(1, weight=1, uniform="col")
-    chart_frame.columnconfigure(2, weight=1, uniform="col")
-    chart_frame.rowconfigure(0, weight=1)
-    canvas_light_chart.get_tk_widget().grid(
-        row=0, column=0, padx=10, pady=10, sticky="nsew"
-    )
-    canvas_humidity_chart.get_tk_widget().grid(
-        row=0, column=1, padx=10, pady=10, sticky="nsew"
-    )
-    user_info_label.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
-    user_info_label.config(anchor="center")
+    chart_frame.columnconfigure(2, weight=1, uniform="col")"""
+
     ##############################################################
     # ####################plant_pot_list_frame####################
     plant_pot_list_frame = tk.LabelFrame(window, padx=10, pady=10)
@@ -517,8 +613,6 @@ def user_view(my_plant_service, current_user, current_user_id):
         ),
     )
 
-    ##############################################################
-    ##############################################################
     # pot_list_label_frame widgets
     pot_list_label_frame = tk.LabelFrame(
         plant_pot_list_frame,
@@ -531,16 +625,6 @@ def user_view(my_plant_service, current_user, current_user_id):
     )
     pot_list_label_frame.grid(row=0, column=1, sticky="nsew")
     pot_list_label_frame.columnconfigure(1, weight=1)
-
-    refresh = tk.Button(
-        pot_list_label_frame,
-        text="Refresh",
-        padx=5,
-        pady=5,
-        width=20,
-        command=update,
-    )
-    # refresh.pack(side="top", anchor="nw", padx=10, pady=10)
 
     scrollable_pot_canvas = tk.Canvas(
         pot_list_label_frame, borderwidth=0, highlightthickness=0
@@ -582,5 +666,6 @@ def user_view(my_plant_service, current_user, current_user_id):
     update_time()  # start updating the time label
     load_plants()
     load_planted_plants()
+    update_pie_chart()
     window.update()
     window.mainloop()

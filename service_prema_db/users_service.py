@@ -1,6 +1,3 @@
-from ast import NotIn
-from os import name
-from typing import Collection
 import pymongo
 from pymongo.errors import PyMongoError
 

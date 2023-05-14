@@ -13,12 +13,15 @@ class PlantWidget(tk.Frame):  # tk.Frame
         self.load_planted_plants()
         self.destroy()
 
-    def __init__(self, parent, plant, my_plant_service, load_planted_plants):
+    def __init__(
+        self, parent, plant, my_plant_service, load_planted_plants, update_pie_chart
+    ):
         super().__init__(parent, borderwidth=2, relief="groove")
-        
+
         self.values = plant
         self.my_plant_service = my_plant_service
         self.load_planted_plants = load_planted_plants
+        self.update_pie_chart = update_pie_chart
         self.grid_columnconfigure(0, weight=1)
         # retrieve image data from MongoDB
         image_data = self.values.get("image_data")
@@ -34,25 +37,21 @@ class PlantWidget(tk.Frame):  # tk.Frame
 
         name = tk.Label(
             self,
-           
             justify="left",
             text="Name: \t\t{}".format(self.values["name"]),
         )
         type = tk.Label(
             self,
-            
             justify="left",
             text="Type: \t\t{}".format(self.values["type"]),
         )
         watering = tk.Label(
             self,
-            
             justify="left",
             text="Watering: \t{}".format(self.values["watering"]),
         )
         description = tk.Label(
             self,
-           
             justify="left",
             text="Description: \t{}".format(self.values["desc"]),
             wraplength=720,
@@ -60,18 +59,16 @@ class PlantWidget(tk.Frame):  # tk.Frame
 
         self.delete_button = tk.Button(
             self,
-            
             text="Delete",
-            command=lambda: self.delete_widget_and_data(),
+            command=lambda: (self.delete_widget_and_data(), self.update_pie_chart()),
             width=20,
             padx=5,
             pady=5,
         )
         self.add_to_pot_button = tk.Button(
             self,
-           
             text="Add to Pot",
-            command=lambda: self.add_plant_to_pot(),
+            command=lambda: (self.add_plant_to_pot(), self.update_pie_chart()),
             width=20,
             padx=5,
             pady=5,

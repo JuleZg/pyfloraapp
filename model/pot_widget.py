@@ -8,20 +8,22 @@ import requests
 
 
 class PotWidget(tk.Frame):  # tk.Frame
-    def remove_from_pot(self, load_planted_plants, load_plants):
+    def remove_from_pot(self, load_planted_plants, load_plants,update_pie_chart):
         self.my_plant_service.handle_user_plant(self.values["_id"], False)
         self.destroy()
         load_planted_plants()
         load_plants()
+        update_pie_chart()
 
     def __init__(
-        self, parent, plant, my_plant_service, load_planted_plants, load_plants
+        self, parent, plant, my_plant_service, load_planted_plants, load_plants,update_pie_chart
     ):
         super().__init__(parent, borderwidth=2, relief="groove")
         self.values = plant
         self.my_plant_service = my_plant_service
         self.load_planted_plants = load_planted_plants
         self.load_plants = load_plants
+        self.update_pie_chart=update_pie_chart
 
         def sync_data():
             # LIGHT SENSOR READINGS
@@ -199,7 +201,7 @@ class PotWidget(tk.Frame):  # tk.Frame
         self.remove_from_pot_button = tk.Button(
             self,
             text="Remove from pot",
-            command=lambda: self.remove_from_pot(self.load_planted_plants, load_plants),
+            command=lambda: self.remove_from_pot(self.load_planted_plants, load_plants,update_pie_chart),
             width=20,
             padx=5,
             pady=5,
@@ -207,7 +209,7 @@ class PotWidget(tk.Frame):  # tk.Frame
 
         # planted_pot_label sensor data
         # sensor_monitor_frame gui
-        sensor_monitor_frame = tk.LabelFrame(self,text="Sensors Data")
+        sensor_monitor_frame = tk.LabelFrame(self, text="Sensors Data")
         self.sync_button = tk.Button(
             sensor_monitor_frame,
             text="Sync",
@@ -218,7 +220,7 @@ class PotWidget(tk.Frame):  # tk.Frame
         )
         ph_label = tk.Label(sensor_monitor_frame, text="pH: N/A", justify="left")
         salinity_label = tk.Label(
-            sensor_monitor_frame,text="Salinity: N/A", justify="left"
+            sensor_monitor_frame, text="Salinity: N/A", justify="left"
         )
         light_label = tk.Label(sensor_monitor_frame, text="Light: N/A", justify="left")
         temp_label = tk.Label(

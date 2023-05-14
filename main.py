@@ -1,4 +1,3 @@
-from bson import ObjectId
 from service_prema_db.plant_service import PlantService
 from service_prema_db.users_service import UsersService
 from views.login import login_gui
@@ -19,26 +18,11 @@ def main():
         collection_name_plants,
         collection_name_user_plant,
     )
-    # my_plant_service.find_all_plants()
-
     my_users_service = UsersService(
         connection_uri, database_name, collection_name_users
     )
 
-    # my_plant_service.save_plant_for_user( "6436d92c71034b4156556e28", "643ea5a565423be96a729c5a"    )
-
-    # some_data = my_plant_service.get_user_plants("64355ec03a881fc338fadc5d")
-
-    # my_plant_service.delete_user_plant("64418c1b211c7806cace8b61")  # tu saljes id od pot_plant "dokumenta"
-    # my_plant_service.insert_binary("644ad480ceb4b96a0648fd86",'plant_img/rose.png')
-    # print("test gotov")
-    # my_plant_service.get_user_plants("644667755556f1581b214a8b")
-    # print(some_data)
-    # my_plant_service.save_plant_for_user(        "644667755556f1581b214a8b", "64466747b4a5c6af6eae2a54"    )
-
     login_gui(my_users_service, my_plant_service)
-    # my_plant_service.add_plant_to_pot(ObjectId("644e9e827a2669ba2e480377"))
-    # my_plant_service.handle_user_plant(ObjectId("644e9e827a2669ba2e480377"), False)
 
 
 if __name__ == "__main__":

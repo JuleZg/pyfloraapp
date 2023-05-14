@@ -43,12 +43,10 @@ def admin_view(my_users_service):
             repopulate_user_table(all_users)
             add_user_window.destroy()
 
-        # Create a new window
         add_user_window = tk.Toplevel(window)
         add_user_window.title("Add User")
         add_user_window.geometry("400x300")
 
-        # Create a form for adding a new user
         username_label = tk.Label(add_user_window, text="Username:")
         username_label.pack()
         username_entry = tk.Entry(add_user_window)
@@ -96,24 +94,19 @@ def admin_view(my_users_service):
     window = tk.Tk()
     window.title("Admin View")
     window.attributes("-fullscreen", True)
-    # background
     img = Image.open("plant_img/admin_view_bg2.png")
-    # bg_img = ImageTk.PhotoImage(img)
     bg_img = ImageTk.PhotoImage(img.resize((1920, 1000)))
     bg_label = tk.Label(window, image=bg_img)
     bg_label.place(x=0, y=0, relwidth=1, relheight=1)
     all_users = my_users_service.find_all_users()
     window.geometry("1920x1000")
     FONT = ("Roboto Mono", 12)
-    # get the screen width and height
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
-    # calculate the x and y coordinates to center the window
     x = (screen_width // 2) - (1920 // 2)
     y = (screen_height // 2) - (1080 // 2)
     window.geometry(f"+{x}+{y}")
 
-    # Create a header frame with a title label and a button to return to the dashboard
     header_frame = tk.Frame(window, bg="blue", padx=20, pady=10)
     header_frame.pack(side="top", fill="x")
     title_label = tk.Label(
@@ -160,7 +153,6 @@ def admin_view(my_users_service):
     )
     delete_user.pack(side="right", padx=10)
 
-    # add user button
     add_user = tk.Button(
         add_delete_frame,
         text="Add new user",
@@ -172,7 +164,6 @@ def admin_view(my_users_service):
     )
     add_user.pack(side="left", padx=10)
 
-    # user table frame and table
     user_table_frame = tk.Frame(window)
     user_table_frame.pack(side="bottom", fill="y", expand=True)
 
