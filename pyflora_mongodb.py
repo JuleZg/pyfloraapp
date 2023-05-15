@@ -1,12 +1,6 @@
 import pymongo
-import random
 from bson.binary import Binary
-from pymongo import MongoClient
-from bson.objectid import ObjectId
-from PIL import Image
 import os
-from bson.binary import Binary
-import io
 
 
 # drops collection if it exists
@@ -28,7 +22,7 @@ db = client["pyflora"]
 # Create a collection for the users
 collection_name = "users"
 collection = db[collection_name]
-# drop_collection(collection_name, db)
+drop_collection(collection_name, db)
 users = [
     {
         "username": "admin",

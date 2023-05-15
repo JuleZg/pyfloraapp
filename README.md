@@ -1,62 +1,47 @@
 # pyfloraapp
-TODO: opis aplikacije, upute
+    skinuti MongoDB bazu i MongoDB Compass
+    kreirati bazu s imenom "pyflora"
+    kroz VSC otvoriti file "pyflora_mongodb.py" pokrenuti run da se obrisu sve kolekcije u bazi i da se kreira samo  "admin" korisnik
+    
+    racunalo mora biti spojeno na internet
+    pokrenuti file "main.py" otvara se login screen
+    USERNAME: admin
+    PASSWORD: admin
 
+    ADMIN VIEW
+        nakon ulogiravanja kao admin, otvara se aplikacija
+        dodavanje usera u bazu - klikom na "Add new user" otvara novi prozor u koji se upisuju podatci o korisniku
+        brisanje usera - prvo oznaciti usera kojeg zelimo obrisati klikom bilo gdje na redak toga usera, nakon toga kliknuti na "Delete Selected User"
+        admin view se gasi na "Close Admin View"
 
-TODO:    1. Prijava u aplikaciju.
-            predefinirani korisnik koji može uređivati svoje korisničke podatke
-            obvezna polja, skrivanje prikaza podataka u poljima tijekom unosa
-            nakon uspješne prijave, korisnik može pristupiti ostalim funkcionalnostima aplikacije
+    USER VIEW
+        pokrenuti file "main.py" otvara se login screen
+        ulogirati se sa dodanim korisnikom koji smo unjeli kroz admin view
 
-TODO:    2. Ažuriranje podataka sa senzora
-            Ovisno o očitanim podacima, pokreću se aktivnosti
-            Ako je vlažnost zemljišta niska, pokreće se aktivnost zalijevanja i sl.
+        nakon pokretanja aplikacije otvara se prozor u kojem imamo header, sensor & chart frame i plant list & pot list
+        
+        HEADER
+            imamo trenutni datum i vrijeme, te trenutnu temperaturu u gradu Zagrebu, kroz weather api.
 
-TODO:    3. Evidencija biljaka # API https://docs.trefle.io/docs/examples/snippets/
-            Aplikacija treba imati bazu podataka o biljkama 
-                a. Podaci koje treba čuvati o biljci su ():
-                    i. identifikacijski broj
-                    ii. naziv
-                    iii. fotografija
-                    iiii. njega (ovi podaci se koriste za usporedbu s mjerenjima dobivenih sa senzora te se osnovom njih pokreću željene akcije):
-                            1. vlažnost tla – potrebno zalijevanje jednom dnevno/tjedno/mjesečno …
-                            2. tamnija ili svjetlija mjesta
-                            toplija ili hladnija mjesta
-                            3. preporuka za dodavanje supstrata
-                b. Evidencija biljaka može se:
-                i. dopunjavati podacima o novim biljkama
-                ii. ažurirati mijenjanjem podataka o postojećim biljkama
-                iii. ažurirati brisanjem podataka o postojećim biljkama
+        SENSOR & CHART FRAME
+            
+            SENSOR DATA
+                prvi frame prikazuje SENSOR DATA, gdje sam generirao neke podatke i svaki puta pritiskom na tipku "SYNC" generiraju se novi podatci (ideja je da su to trenutni podatci prostorije)
 
-TODO:    4. Evidencija PyFloraPosuda
-            Aplikacija treba imati podatke o svim posudama koje su dodane u aplikaciju, kao i o posađenoj biljci u toj posudi.
-                a. Podaci koje treba čuvati o posudi su:
-                    i. identifikacijski broj
-                    ii. naziv – najbolje naziv lokacije. Primjer: „Kuhinja – polica pored prozora.“
-                    iii. posađena biljka. Ako ovog podatka nema, onda se posuda smatra praznom i senzori NE šalju podatke, nego posuda ima status „PRAZNA posuda“.
-                b. Dohvat podataka sa senzora u posudama.
-                c. Lista svih zauzetih posuda. Postoji gumb za proširivanje prikaza na posude koje su slobodne. Klikom na neku posudu otvara se ekran s detaljima o posudi.
-                d. Prikaz detalja o svakoj posudi.
-                    osim detalja o posudi
-                    grafički prikaz mjerenja dobivenih podataka sa senzora
-                    prikaz podataka treba biti moguć u minimalno tri oblika (line chart, pie chart, histogram).
-                e. Promjena statusa posude:
-                    i. ukoliko se posuda pokvarila, korisnik treba moći posudu izbrisati iz sustava
-                    ii. ukoliko se želi promijeniti biljka, korisnik može „isprazniti“ posudu i ako želi dodati novu biljku ili jednostavno ostaviti posudu praznom.
-TODO:    5. Baza podataka u koju će biti pohranjeni svi podaci. SQLite je sasvim dovoljan za ovaj tip aplikacije, ali ako želite možete koristiti i neku drugu bazu podataka.
+            CHART FRAME
+                kod prvog pokretanja imamo dva charta, LIGHT CHART i HUMIDITY CHART, podatci se random generiraju svaki puta kada se pokrene aplikacija iznova, kasnije kada se doda biljka iz baze pojavljuje se jos jedan PIE CHART sa realnim prikazom omjera biljaka koje korisnik posjeduje i koje je korisnik posadio u teglu.
 
+        PLANT LIST
+            pritiskom na "Add New Plant" otvara se novi prozor koji povlaci podatke o biljkama iz baze
+            da bi dodali biljku iz baze korisniku, oznacimo redak biljke i kliknemo na "Add Plant", mozemo dadavati sve biljke koliko god puta hocemo
+            zatvaramo prozor klikom na "Close"
 
-There are several sensors that can be used to monitor plant data, including:
+            nakon sto smo dodali nekoliko biljaka u plant listi se pojavljuju biljke sa osnovnim podatcima
+            u bazi je kreiran novi collection "user_plant" sa "user_id", "plant_id" i "planted" koji moze biti True (biljka je posađena) ili False (biljka nije posađena)
+        
+        POT LIST
+            dodavanje biljke u pot(sađenje) vrsimo na nacin tako da u prozoru biljke kliknemo na "Add to Pot"
+            ta biljka se automatski prebacuje u POT LIST i tretira se kao da je posađena
+            u pot listi imamo osnovne podatke biljke i sensor data koji povlaci podatke bas iz te tegle u kojoj se nalazi biljka(podatci se nasumicno generiraju)
+            klikom na "Remove From Pot" biljka se brise iz pot liste i vraća u plant listu iz koje je opet mozemo dodati ili obrisati skroz sa trenutnog korisnika
 
-Soil moisture sensors: These sensors measure the water content of the soil and can help you determine when it's time to water your plants.
-
-Light sensors: These sensors can help you monitor the amount of light your plants are receiving, which is important for photosynthesis and growth.
-
-Temperature sensors: These sensors can help you monitor the temperature of your plants' environment, which can affect their growth and overall health.
-
-Humidity sensors: These sensors can help you monitor the humidity level of your plants' environment, which can affect their growth and susceptibility to disease.
-
-pH sensors: These sensors can help you monitor the pH level of the soil, which is important for proper nutrient uptake by the plants.
-
-CO2 sensors: These sensors can help you monitor the carbon dioxide levels in the air, which is important for photosynthesis.
-
-Nutrient sensors: These sensors can help you monitor the levels of various nutrients in the soil, which is important for the overall health and growth of your plants.

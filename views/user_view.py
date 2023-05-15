@@ -311,13 +311,10 @@ def user_view(my_plant_service, current_user, current_user_id):
             ax3.pie(
                 sizes, labels=labels, colors=colors, autopct="%1.1f%%", startangle=140
             )
+
             ax3.set_title("User Plants vs User Planted Plants")
-            fig.set_facecolor(
-                sensor_monitor_frame_bg
-            )  # Set the background color of the entire figure
-            ax3.set_facecolor(
-                sensor_monitor_frame_bg
-            )  # Set the background color of the pie chart
+            fig.set_facecolor(sensor_monitor_frame_bg)
+            ax3.set_facecolor(sensor_monitor_frame_bg)
 
             # Redraw the pie chart
             canvas_pie_chart.draw()
@@ -456,12 +453,12 @@ def user_view(my_plant_service, current_user, current_user_id):
 
     chart_width = 400
     chart_min_height = 250
+    days_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     # light chart
     chart_light_values = sync_data()["chart_light_values_list"]["value"]
     chart_light = plt.figure(figsize=(chart_width / 100, chart_min_height / 100))
     ax1 = chart_light.add_subplot(111)
-    days_of_week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     ax1.bar(days_of_week, chart_light_values)
     ax1.set_title("Light Chart")
     chart_light.set_facecolor(sensor_monitor_frame_bg)
